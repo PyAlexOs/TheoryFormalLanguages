@@ -1,0 +1,5 @@
+for (variable := 1.1e10; var2 < .9E-7; current = variable3)
+		
+	do variable3 = var2;
+					var2     = 	9.99923e+44
+23+e3
