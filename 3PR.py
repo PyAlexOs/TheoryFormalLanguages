@@ -77,7 +77,7 @@ def tokenize(filepath: str) -> dict:
     return tokens
 
 
-if __name__ == "__main__":
+def main():
     filepath = path.abspath(input('Enter filepath: '))  # files/test.txt
     if path.exists(filepath):
         tokens = tokenize(filepath)
@@ -86,3 +86,7 @@ if __name__ == "__main__":
 
     for (key, value) in tokens.items():
         print(key, ":", value)
+
+
+if __name__ == "__main__":
+    main()

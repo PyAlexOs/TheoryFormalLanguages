@@ -81,7 +81,7 @@ def prepare(string: str) -> list:
     return in_list
 
 
-if __name__ == '__main__':
+def main():
     expression = input('Input your equation: ')
     expression = prepare(expression)
     print('enter the values of all variables that participate in the expression (then enter "\\)')
@@ -96,3 +96,7 @@ if __name__ == '__main__':
     result = transform(expression, params)
     print(' '.join(result))
     print(count_res(result, params))
+
+
+if __name__ == '__main__':
+    main()
