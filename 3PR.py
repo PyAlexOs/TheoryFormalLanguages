@@ -85,7 +85,7 @@ def main():
         exit(f"Path {filepath} doesn't exists.")
 
     for (key, value) in tokens.items():
-        print(key, ":", value)
+        print(key, ": ", value, sep='')
 
 
 if __name__ == "__main__":
