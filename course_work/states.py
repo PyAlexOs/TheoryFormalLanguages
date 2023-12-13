@@ -8,9 +8,11 @@ class State(Enum):
 
     Delimiter = 2
     Identifier = 3
-    Number = 4
+    Keyword = 4
+    Number = 5
+    Boolean = 6
 
-    MulDiv = 5
-    AddSub = 6
-    Relation = 7
-    Type = 8
+    MulDiv = 7
+    AddSub = 8
+    Relation = 9
+    Type = 10

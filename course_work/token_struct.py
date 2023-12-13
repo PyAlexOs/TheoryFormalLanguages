@@ -3,6 +3,7 @@ from enum import Enum
 
 
 class TokenType(Enum):
+    UnexpectedCharacter = 0
     Binary = 1
     Octal = 2
     Decimal = 3
