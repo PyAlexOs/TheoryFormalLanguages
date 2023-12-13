@@ -10,18 +10,18 @@ digit [0-9]
 number ([-+]?({digit}*\.{digit}+|{digit}+\.|{digit}+)([eE][-+]?{digit}+)?[flFL]?)
 ws [ \t\n]+
 %%
-\{				{printf("(BEGIN_OBJECT, %s)\n", yytext); ch += yyleng;}
-\}				{printf("(END_OBJECT, %s)\n", yytext); ch += yyleng;}
-\[				{printf("(BEGIN_ARRAY, %s)\n", yytext); ch += yyleng;}
-\]				{printf("(END_ARRAY, %s)\n", yytext); ch += yyleng;}
-,				{printf("(COMMA, %s)\n", yytext); ch += yyleng;}
-:				{printf("(COLON, %s)\n", yytext); ch += yyleng;}
+\{				                                    {printf("(BEGIN_OBJECT, %s)\n", yytext); ch += yyleng;}
+\}				                                    {printf("(END_OBJECT, %s)\n", yytext); ch += yyleng;}
+\[				                                    {printf("(BEGIN_ARRAY, %s)\n", yytext); ch += yyleng;}
+\]				                                    {printf("(END_ARRAY, %s)\n", yytext); ch += yyleng;}
+\,				                                    {printf("(COMMA, %s)\n", yytext); ch += yyleng;}
+\:				                                    {printf("(COLON, %s)\n", yytext); ch += yyleng;}
 
-{literal}			{printf("(LITERAL: %s)\n", yytext); ch += yyleng;}
-{string}			{printf("(STRING, %s)\n", yytext); ch += yyleng;}
-{number}			{printf("(NUMBER, %s)\n", yytext); ch += yyleng;}
-{ws}				{ch += yyleng;}
-[^a-zA-Z0-9 \.\"\'\+\-\n\t]	{printf("(UNKNOWN CHARACTER, %s)\n", yytext); ch += yyleng;}
+{literal}			                                {printf("(LITERAL: %s)\n", yytext); ch += yyleng;}
+{string}			                                {printf("(STRING, %s)\n", yytext); ch += yyleng;}
+{number}			                                {printf("(NUMBER, %s)\n", yytext); ch += yyleng;}
+{ws}				                                {ch += yyleng;}
+[^{literal}|{string}|{number}|\{|\}|\[|\]|\,|\: ]	{printf("(UNKNOWN CHARACTER, %s)\n", yytext); ch += yyleng;}
 %%
 int main(int argc, char **argv) {
     if(argc < 2) {
