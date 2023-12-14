@@ -230,13 +230,18 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                     tokens.put(Token(_value=buffer, _token_type=TokenType.MulDiv,
                                      _line=current_line, _char=current_char - 1))
                     current_state = State.Start
-
+                    # TODO next token analysis
                     continue
 
                 case State.AddSub:
                     tokens.put(Token(_value=buffer, _token_type=TokenType.AddSub,
                                      _line=current_line, _char=current_char - 1))
                     current_state = State.Start
+                    # TODO next token analysis
+                    continue
+
+                case State.Logical:
+                    # token analysis
 
                     continue
 
