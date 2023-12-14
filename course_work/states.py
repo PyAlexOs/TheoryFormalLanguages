@@ -14,5 +14,6 @@ class State(Enum):
 
     MulDiv = 7
     AddSub = 8
-    Relation = 9
-    Type = 10
+    Logical = 9
+    Relation = 10
+    Type = 11

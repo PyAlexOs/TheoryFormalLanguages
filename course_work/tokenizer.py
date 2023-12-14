@@ -1,5 +1,5 @@
-from language_model import (KEYWORDS, RELATION_SYMBOLS, LOGICAL_OPERATORS, TYPES, ADDSUB, MULDIV, DELIMITERS,
-                            WHITESPACES, DIGITS, EXTENDED_DIGITS, BOOLEAN, LETTERS)
+from consts import (KEYWORDS, RELATION_SYMBOLS, LOGICAL_OPERATORS, TYPES, ADDSUB, MULDIV, DELIMITERS,
+                    WHITESPACES, BOOLEAN, DIGITS, EXTENDED_DIGITS, LETTERS)
 from token_struct import Token, TokenType
 from states import State
 from queue import Queue
@@ -37,7 +37,7 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
     current_symbol: str = ""
     buffer: str = ""
 
-    current_line: int = 0
+    current_line: int = 1
     current_char: int = 0
 
     with open(filename, "r", encoding=encoding) as program:
@@ -87,6 +87,7 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                         current_char = 0
                     tokens.put(Token(_value=buffer, _token_type=TokenType.Delimiter,
                                      _line=current_line, _char=current_char - 1))
+                    current_state = State.Start
 
                     continue
 
@@ -104,7 +105,7 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                             current_state = State.Boolean
 
                         elif buffer in LOGICAL_OPERATORS:
-                            current_state = State.MulDiv
+                            current_state = State.Logical
 
                         else:
                             tokens.put(Token(_value=buffer, _token_type=TokenType.Identifier,
@@ -113,6 +114,18 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                             if current_symbol in DELIMITERS:
                                 buffer = current_symbol
                                 current_state = State.Delimiter
+
+                            elif current_symbol in ADDSUB:
+                                buffer = current_symbol
+                                current_state = State.AddSub
+
+                            elif current_symbol in MULDIV:
+                                buffer = current_symbol
+                                current_state = State.MulDiv
+
+                            elif current_symbol in LOGICAL_OPERATORS:
+                                buffer = current_symbol
+                                current_state = State.Logical
 
                             elif current_symbol in WHITESPACES:
                                 current_state = State.Start
@@ -146,25 +159,47 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                         buffer += current_symbol
 
                     else:
+                        number_type = TokenType.UnexpectedCharacter
+                        if is_binary(buffer):
+                            number_type = TokenType.Binary
 
-                        """tokens.put(Token(_value=buffer, _token_type=TokenType.Identifier,
-                                         _line=current_line, _char=current_char - len(buffer)))"""
+                        elif is_octal(buffer):
+                            number_type = TokenType.Octal
+
+                        elif is_decimal(buffer):
+                            number_type = TokenType.Decimal
+
+                        elif is_hexadecimal(buffer):
+                            number_type = TokenType.Hexadecimal
+
+                        elif is_real(buffer):
+                            number_type = TokenType.Real
+
+                        if number_type == TokenType.UnexpectedCharacter:
+                            current_state = State.Error
+                            continue
+
+                        tokens.put(Token(_value=buffer, _token_type=number_type,
+                                         _line=current_line, _char=current_char - len(buffer)))
 
                         if current_symbol in DELIMITERS:
                             buffer = current_symbol
                             current_state = State.Delimiter
 
-                        elif current_symbol in WHITESPACES:
-                            current_state = State.Start
-
                         elif current_symbol in RELATION_SYMBOLS:
+                            buffer = current_symbol
                             current_state = State.Relation
 
                         elif current_symbol in ADDSUB:
+                            buffer = current_symbol
                             current_state = State.AddSub
 
                         elif current_symbol in MULDIV:
+                            buffer = current_symbol
                             current_state = State.MulDiv
+
+                        elif current_symbol in WHITESPACES:
+                            current_state = State.Start
 
                         else:
                             current_state = State.Error
@@ -172,7 +207,79 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                     continue
 
                 case State.Boolean:
-                    pass
+                    tokens.put(Token(_value=buffer, _token_type=TokenType.Boolean,
+                                     _line=current_line, _char=current_char - len(buffer)))
+
+                    if current_symbol in DELIMITERS:
+                        buffer = current_symbol
+                        current_state = State.Delimiter
+
+                    elif current_symbol in LOGICAL_OPERATORS:
+                        buffer = current_symbol
+                        current_state = State.Logical
+
+                    elif current_symbol in WHITESPACES:
+                        current_state = State.Start
+
+                    else:
+                        current_state = State.Error
+
+                    continue
+
+                case State.MulDiv:
+                    tokens.put(Token(_value=buffer, _token_type=TokenType.MulDiv,
+                                     _line=current_line, _char=current_char - 1))
+                    current_state = State.Start
+
+                    continue
+
+                case State.AddSub:
+                    tokens.put(Token(_value=buffer, _token_type=TokenType.AddSub,
+                                     _line=current_line, _char=current_char - 1))
+                    current_state = State.Start
+
+                    continue
+
+                case State.Relation:
+                    current_symbol = program.read(1)
+                    current_char += 1
+
+                    if buffer + current_symbol in RELATION_SYMBOLS:
+                        buffer += current_symbol
+                        tokens.put(Token(_value=buffer, _token_type=TokenType.Relation,
+                                         _line=current_line, _char=current_char - 2))
+                        current_state = State.Start
+
+                    else:
+                        if buffer in RELATION_SYMBOLS:
+                            tokens.put(Token(_value=buffer, _token_type=TokenType.Relation,
+                                             _line=current_line, _char=current_char - 1))
+
+                        else:
+                            current_state = State.Error
+                            continue
+
+                        if current_symbol in LETTERS:
+                            buffer = current_symbol
+                            current_state = State.Identifier
+
+                        elif current_symbol in DIGITS or current_symbol == ".":
+                            buffer = current_symbol
+                            current_state = State.Number
+
+                        elif current_symbol in WHITESPACES:
+                            current_state = State.Start
+
+                        else:
+                            current_state = State.Error
+
+                    continue
+
+                case State.Type:
+                    tokens.put(Token(_value=buffer, _token_type=TokenType.VariableType,
+                                     _line=current_line, _char=current_char - 1))
+                    current_state = State.Start
+
                     continue
 
                 case State.Note:
@@ -181,10 +288,6 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                         current_state = State.Start
 
                     continue
-
-    if buffer != "" and current_symbol != "":
-        tokens.put(Token(_value=buffer, _token_type=TokenType.UnexpectedCharacter,
-                         _line=current_line, _char=current_char - len(buffer)))
 
     return tokens
 
