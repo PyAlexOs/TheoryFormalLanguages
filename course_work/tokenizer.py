@@ -7,7 +7,7 @@ import re
 
 def is_identifier(token: str) -> bool:
     """ Checks if the token is identifier """
-    return re.match(r"[a-zA-Z][0-9a-zA-Z]*^$", token) is not None
+    return re.match(r"^[a-zA-Z][0-9a-zA-Z]*$", token) is not None
 
 
 def is_binary(token: str) -> bool:
@@ -37,6 +37,7 @@ def is_real(token: str) -> bool:
 
 def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
     """ Splits the source code of the program into tokens """
+
     tokens: Queue[Token] = Queue()
     current_state = State.Start
     current_symbol: str = ""
@@ -62,7 +63,7 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                     elif current_symbol in LETTERS:
                         current_state = State.Identifier
 
-                    elif current_state in DIGITS or current_state == ".":
+                    elif current_symbol in DIGITS or current_state == ".":
                         current_state = State.Number
 
                     elif current_symbol in DELIMITERS.keys():
@@ -158,6 +159,14 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
 
                         buffer = current_symbol
                         current_state = State.Start
+
+                    continue
+
+                case State.Type:
+                    tokens.put(Token(_value=buffer, _token_type=TYPES[buffer],
+                                     _line=current_line, _char=current_char - 1))
+                    buffer = ""
+                    current_state = State.Start
 
                     continue
 

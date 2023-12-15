@@ -7,7 +7,7 @@ def main():
         filename = sys.argv[1]
     except IndexError:
         # exit("Filename wasn't given.")
-        filename = "language_files/is_even/is_even.lang"
+        filename = "language_files/test/test.lang"
 
     tokens = get_tokens(filename)
     save_tokens(''.join(filename.split(".")[:-1:]) + ".tokenlist", tokens)
