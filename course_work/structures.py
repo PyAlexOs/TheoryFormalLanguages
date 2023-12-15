@@ -134,15 +134,25 @@ class IdentifierType(Enum):
     BOOLEAN = 3
 
 
+TYPES = {
+    "%": IdentifierType.INTEGER,
+    "!": IdentifierType.REAL,
+    "$": IdentifierType.BOOLEAN
+}
+
+
+@dataclass
 class Identifier:
     name: str
     type: IdentifierType
     is_declared: bool
     is_assigned: bool
 
-    def __init__(self, _name, _type=IdentifierType.UNKNOWN_TYPE):
+    def __init__(self, _name):
         self.name = _name
-        self.type = _type
+        self.type = IdentifierType.UNKNOWN_TYPE
+        self.is_assigned = False
+        self.is_declared = False
 
     def __str__(self) -> str:
         return self.type.name + "\t" + self.name + "\t" + ("is assigned" if self.is_assigned else

@@ -1,8 +1,13 @@
-from structures import (Token, TokenType, KEYWORDS, DELIMITERS, WHITESPACES, DIGITS, EXTENDED_DIGITS,
+from structures import (Token, TokenType, KEYWORDS, DELIMITERS, WHITESPACES, TYPES, DIGITS, EXTENDED_DIGITS,
                         LETTERS, IdentifierType, Identifier)
 from states import State
 from queue import Queue
 import re
+
+
+def is_identifier(token: str) -> bool:
+    """ Checks if the token is identifier """
+    return re.match(r"[a-zA-Z][0-9a-zA-Z]*^$", token) is not None
 
 
 def is_binary(token: str) -> bool:
@@ -41,18 +46,18 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
     current_char: int = 0
 
     with open(filename, "r", encoding=encoding) as program:
-        while current_state != State.Eof:
+        while current_state != State.EOF:
             match current_state:
                 case State.Start:
-                    current_symbol = program.read(1)
-                    current_char += 1
+                    current_symbol = buffer
+                    if current_symbol == "":
+                        current_symbol = program.read(1)
+                        current_char += 1
 
                     buffer = current_symbol
                     if current_symbol in WHITESPACES:
+                        buffer = ""
                         continue
-
-                    if current_symbol in DELIMITERS:
-                        current_state = State.Delimiter
 
                     elif current_symbol in LETTERS:
                         current_state = State.Identifier
@@ -60,34 +65,21 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                     elif current_state in DIGITS or current_state == ".":
                         current_state = State.Number
 
-                    elif current_symbol in MULDIV:
-                        current_state = State.MulDiv
+                    elif current_symbol in DELIMITERS.keys():
+                        current_state = State.Delimiter
 
-                    elif current_symbol in ADDSUB:
-                        current_state = State.AddSub
-
-                    elif current_symbol in RELATION_SYMBOLS:
-                        current_state = State.Relation
-
-                    elif current_symbol in TYPES:
+                    elif current_symbol in TYPES.keys():
                         current_state = State.Type
 
                     elif current_symbol == "{":
                         current_state = State.Note
 
+                    elif current_symbol == "" and buffer == "":
+                        current_state = State.EOF
+
                     else:
-                        current_state = State.Error
-
-                    continue
-
-                case State.Delimiter:
-                    if buffer == "\n":
-                        buffer = ":"
-                        current_line += 1
-                        current_char = 0
-                    tokens.put(Token(_value=buffer, _token_type=TokenType.Delimiter,
-                                     _line=current_line, _char=max(current_char - 1, 0)))
-                    current_state = State.Start
+                        tokens.put(Token(_value=buffer, _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
+                                         _line=current_line, _char=current_char - len(buffer)))
 
                     continue
 
@@ -98,56 +90,42 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                     if current_symbol in LETTERS or current_symbol in DIGITS:
                         buffer += current_symbol
                     else:
-                        if buffer in KEYWORDS:
-                            current_state = State.Keyword
-
-                        elif buffer in BOOLEAN:
-                            current_state = State.Boolean
-
-                        elif buffer in LOGICAL_OPERATORS:
-                            current_state = State.Logical
-
-                        else:
-                            tokens.put(Token(_value=buffer, _token_type=TokenType.Identifier,
+                        if buffer in KEYWORDS.keys():
+                            tokens.put(Token(_value=buffer, _token_type=KEYWORDS[buffer],
                                              _line=current_line, _char=current_char - len(buffer)))
 
-                            if current_symbol in DELIMITERS:
-                                buffer = current_symbol
-                                current_state = State.Delimiter
+                        elif is_identifier(buffer):
+                            tokens.put(Token(_value=buffer, _token_type=TokenType.IDENTIFIER,
+                                             _line=current_line, _char=current_char - len(buffer)))
 
-                            elif current_symbol in ADDSUB:
-                                buffer = current_symbol
-                                current_state = State.AddSub
+                        else:
+                            tokens.put(Token(_value=buffer, _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
+                                             _line=current_line, _char=current_char - len(buffer)))
 
-                            elif current_symbol in MULDIV:
-                                buffer = current_symbol
-                                current_state = State.MulDiv
-
-                            elif current_symbol in LOGICAL_OPERATORS:
-                                buffer = current_symbol
-                                current_state = State.Logical
-
-                            elif current_symbol in WHITESPACES:
-                                current_state = State.Start
-
-                            else:
-                                current_state = State.Error
+                        buffer = current_symbol
+                        current_state = State.Start
 
                     continue
 
-                case State.Keyword:
-                    tokens.put(Token(_value=buffer, _token_type=TokenType.Keyword,
-                                     _line=current_line, _char=current_char - len(buffer)))
+                case State.Delimiter:
+                    current_symbol = program.read(1)
+                    current_char += 1
 
-                    if current_symbol in DELIMITERS:
-                        buffer = current_symbol
-                        current_state = State.Delimiter
-
-                    elif current_symbol in WHITESPACES:
-                        current_state = State.Start
+                    if buffer + current_symbol in ["<>", "<=", ">="]:
+                        tokens.put(Token(_value=buffer, _token_type=DELIMITERS[buffer + current_symbol],
+                                         _line=current_line, _char=current_char - 2))
+                        buffer = ""
 
                     else:
-                        current_state = State.Error
+                        if buffer == "\n":
+                            buffer = ":"
+                            current_line += 1
+                            current_char = 0
+                        tokens.put(Token(_value=buffer, _token_type=DELIMITERS[buffer],
+                                         _line=current_line, _char=current_char - 1))
+                        buffer = current_symbol
+
+                    current_state = State.Start
 
                     continue
 
@@ -159,137 +137,34 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                         buffer += current_symbol
 
                     else:
-                        number_type = TokenType.UnexpectedCharacter
+                        number_type = TokenType.UNEXPECTED_CHARACTER_SEQUENCE
                         if is_binary(buffer):
-                            number_type = TokenType.Binary
+                            number_type = TokenType.BINARY
 
                         elif is_octal(buffer):
-                            number_type = TokenType.Octal
+                            number_type = TokenType.OCTAL
 
                         elif is_decimal(buffer):
-                            number_type = TokenType.Decimal
+                            number_type = TokenType.DECIMAL
 
                         elif is_hexadecimal(buffer):
-                            number_type = TokenType.Hexadecimal
+                            number_type = TokenType.HEXADECIMAL
 
                         elif is_real(buffer):
-                            number_type = TokenType.Real
-
-                        if number_type == TokenType.UnexpectedCharacter:
-                            current_state = State.Error
-                            continue
+                            number_type = TokenType.REAL
 
                         tokens.put(Token(_value=buffer, _token_type=number_type,
                                          _line=current_line, _char=current_char - len(buffer)))
 
-                        if current_symbol in DELIMITERS:
-                            buffer = current_symbol
-                            current_state = State.Delimiter
-
-                        elif current_symbol in RELATION_SYMBOLS:
-                            buffer = current_symbol
-                            current_state = State.Relation
-
-                        elif current_symbol in ADDSUB:
-                            buffer = current_symbol
-                            current_state = State.AddSub
-
-                        elif current_symbol in MULDIV:
-                            buffer = current_symbol
-                            current_state = State.MulDiv
-
-                        elif current_symbol in WHITESPACES:
-                            current_state = State.Start
-
-                        else:
-                            current_state = State.Error
-
-                    continue
-
-                case State.Boolean:
-                    tokens.put(Token(_value=buffer, _token_type=TokenType.Boolean,
-                                     _line=current_line, _char=current_char - len(buffer)))
-
-                    if current_symbol in DELIMITERS:
                         buffer = current_symbol
-                        current_state = State.Delimiter
-
-                    elif current_symbol in LOGICAL_OPERATORS:
-                        buffer = current_symbol
-                        current_state = State.Logical
-
-                    elif current_symbol in WHITESPACES:
                         current_state = State.Start
-
-                    else:
-                        current_state = State.Error
-
-                    continue
-
-                case State.MulDiv:
-                    tokens.put(Token(_value=buffer, _token_type=TokenType.MulDiv,
-                                     _line=current_line, _char=current_char - 1))
-                    current_state = State.Start
-                    # TODO next token analysis
-                    continue
-
-                case State.AddSub:
-                    tokens.put(Token(_value=buffer, _token_type=TokenType.AddSub,
-                                     _line=current_line, _char=current_char - 1))
-                    current_state = State.Start
-                    # TODO next token analysis
-                    continue
-
-                case State.Logical:
-                    # token analysis
-
-                    continue
-
-                case State.Relation:
-                    current_symbol = program.read(1)
-                    current_char += 1
-
-                    if buffer + current_symbol in RELATION_SYMBOLS:
-                        buffer += current_symbol
-                        tokens.put(Token(_value=buffer, _token_type=TokenType.Relation,
-                                         _line=current_line, _char=current_char - 2))
-                        current_state = State.Start
-
-                    else:
-                        if buffer in RELATION_SYMBOLS:
-                            tokens.put(Token(_value=buffer, _token_type=TokenType.Relation,
-                                             _line=current_line, _char=current_char - 1))
-
-                        else:
-                            current_state = State.Error
-                            continue
-
-                        if current_symbol in LETTERS:
-                            buffer = current_symbol
-                            current_state = State.Identifier
-
-                        elif current_symbol in DIGITS or current_symbol == ".":
-                            buffer = current_symbol
-                            current_state = State.Number
-
-                        elif current_symbol in WHITESPACES:
-                            current_state = State.Start
-
-                        else:
-                            current_state = State.Error
-
-                    continue
-
-                case State.Type:
-                    tokens.put(Token(_value=buffer, _token_type=TokenType.VariableType,
-                                     _line=current_line, _char=current_char - 1))
-                    current_state = State.Start
 
                     continue
 
                 case State.Note:
                     current_symbol = program.read(1)
                     if current_symbol == "}":
+                        buffer = ""
                         current_state = State.Start
 
                     continue
