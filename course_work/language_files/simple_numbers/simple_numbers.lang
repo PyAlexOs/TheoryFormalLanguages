@@ -1,0 +1,18 @@
+dim current, count, auxiliary, i %
+dim flag $
+count as 0d
+current as 0d
+while count < 100d do [
+    flag as true
+    current as current + 1d
+    for i as 2d to i < current / 2d do [
+        auxiliary as current / i
+        if auxiliary * i = current then
+            flag as false
+    ]
+    if flag then [
+        write(current)
+        count as count + 1d
+    ]
+]
+end

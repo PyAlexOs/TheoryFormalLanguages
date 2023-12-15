@@ -1,6 +1,5 @@
-from consts import (KEYWORDS, RELATION_SYMBOLS, LOGICAL_OPERATORS, TYPES, ADDSUB, MULDIV, DELIMITERS,
-                    WHITESPACES, BOOLEAN, DIGITS, EXTENDED_DIGITS, LETTERS)
-from token_struct import Token, TokenType
+from structures import (Token, TokenType, KEYWORDS, DELIMITERS, WHITESPACES, DIGITS, EXTENDED_DIGITS,
+                        LETTERS, IdentifierType, Identifier)
 from states import State
 from queue import Queue
 import re
@@ -32,6 +31,7 @@ def is_real(token: str) -> bool:
 
 
 def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
+    """ Splits the source code of the program into tokens """
     tokens: Queue[Token] = Queue()
     current_state = State.Start
     current_symbol: str = ""
@@ -41,7 +41,7 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
     current_char: int = 0
 
     with open(filename, "r", encoding=encoding) as program:
-        while current_state != State.Error:
+        while current_state != State.Eof:
             match current_state:
                 case State.Start:
                     current_symbol = program.read(1)
@@ -86,7 +86,7 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                         current_line += 1
                         current_char = 0
                     tokens.put(Token(_value=buffer, _token_type=TokenType.Delimiter,
-                                     _line=current_line, _char=current_char - 1))
+                                     _line=current_line, _char=max(current_char - 1, 0)))
                     current_state = State.Start
 
                     continue

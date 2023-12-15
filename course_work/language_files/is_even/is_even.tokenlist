@@ -2,8 +2,10 @@ Keyword(dim) at {1, 1}
 Identifier(auxiliary) at {1, 5}
 Delimiter(,) at {1, 13}
 Identifier(sum) at {1, 16}
-VariableType(%) at {1, 19}
-Delimiter(:) at {2, -1}
+Delimiter(,) at {1, 18}
+Identifier(i) at {1, 21}
+VariableType(%) at {1, 22}
+Delimiter(:) at {2, 0}
 Keyword(for) at {2, 1}
 Identifier(i) at {2, 5}
 Keyword(as) at {2, 7}

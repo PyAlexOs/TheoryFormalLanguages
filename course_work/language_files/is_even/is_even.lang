@@ -1,4 +1,4 @@
-dim auxiliary, sum %
+dim auxiliary, sum, i %
 for i as 0d to i < 10d do [
     auxiliary = i / 2 : sum as sum + i
     if auxiliary * 2 = i then
