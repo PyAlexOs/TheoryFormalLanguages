@@ -46,7 +46,7 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
     current_line: int = 1
     current_char: int = 0
 
-    with open(filename, "r", encoding=encoding) as program:
+    with (open(filename, "r", encoding=encoding) as program):
         while current_state != State.EOF:
             match current_state:
                 case State.Start:
@@ -79,8 +79,7 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                         current_state = State.EOF
 
                     else:
-                        tokens.put(Token(_value=buffer, _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
-                                         _line=current_line, _char=current_char - len(buffer)))
+                        current_state = State.Undefined
 
                     continue
 
@@ -120,10 +119,14 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                     else:
                         if buffer == "\n":
                             buffer = ":"
+                            tokens.put(Token(_value=buffer, _token_type=DELIMITERS[buffer],
+                                             _line=current_line, _char=current_char - 1))
+
                             current_line += 1
                             current_char = 0
-                        tokens.put(Token(_value=buffer, _token_type=DELIMITERS[buffer],
-                                         _line=current_line, _char=current_char - 1))
+                        else:
+                            tokens.put(Token(_value=buffer, _token_type=DELIMITERS[buffer],
+                                             _line=current_line, _char=current_char - 1))
                         buffer = current_symbol
 
                     current_state = State.Start
@@ -175,6 +178,22 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                     if current_symbol == "}":
                         buffer = ""
                         current_state = State.Start
+
+                    continue
+
+                case State.Undefined:
+                    current_symbol = program.read(1)
+                    current_char += 1
+
+                    if (current_symbol in DELIMITERS.keys() or current_symbol in LETTERS
+                            or current_symbol in TYPES or current_symbol in DIGITS
+                            or current_symbol in WHITESPACES or current_symbol in ["{", "."]):
+                        tokens.put(Token(_value=buffer, _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
+                                         _line=current_line, _char=current_char - len(buffer)))
+                        buffer = current_symbol
+                        current_state = State.Start
+                    else:
+                        buffer += current_symbol
 
                     continue
 

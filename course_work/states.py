@@ -10,3 +10,4 @@ class State(Enum):
     Identifier = 3
     Number = 4
     Type = 5
+    Undefined = 6
