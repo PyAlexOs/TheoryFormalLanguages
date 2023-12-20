@@ -19,6 +19,10 @@ class TokenQueue:
         """ Returns the first item in the queue """
         return self.queue[0]
 
+    def size(self) -> int:
+        """ Returns the queue size """
+        return len(self.queue)
+
     def is_empty(self) -> bool:
         """ Check if the queue is empty """
         return len(self.queue) == 0
