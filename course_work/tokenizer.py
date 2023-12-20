@@ -1,13 +1,17 @@
-from structures import (Token, TokenType, KEYWORDS, DELIMITERS, WHITESPACES, TYPES, DIGITS, EXTENDED_DIGITS,
-                        LETTERS, IdentifierType, Identifier)
-from states import State
-from queue import Queue
+from course_work.structures import (State,
+                                    Token,
+                                    TokenType,
+                                    DELIMITERS,
+                                    LETTERS,
+                                    DIGITS,
+                                    EXTENDED_DIGITS,
+                                    WHITESPACES,
+                                    TYPES,
+                                    KEYWORDS,
+                                    IdentifierType,
+                                    Identifier)
+from course_work.tokenQueue import TokenQueue
 import re
-
-
-def is_identifier(token: str) -> bool:
-    """ Checks if the token is identifier """
-    return re.match(r"^[a-zA-Z][0-9a-zA-Z]*$", token) is not None
 
 
 def is_binary(token: str) -> bool:
@@ -35,16 +39,16 @@ def is_real(token: str) -> bool:
     return re.match(r"^(\d+[Ee][+-]?\d+)|(\d*\.\d+([Ee][+-]?\d+)?)$", token) is not None
 
 
-def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
+def get_tokens(filename: str, encoding: str = "utf-8") -> TokenQueue:
     """ Splits the source code of the program into tokens """
 
-    tokens: Queue[Token] = Queue()
+    tokens = TokenQueue()
     current_state = State.Start
-    current_symbol: str = ""
-    buffer: str = ""
+    current_symbol = ""
+    buffer = ""
 
-    current_line: int = 1
-    current_char: int = 0
+    current_line = 1
+    current_char = 0
 
     with (open(filename, "r", encoding=encoding) as program):
         while current_state != State.EOF:
@@ -73,6 +77,8 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                         current_state = State.Type
 
                     elif current_symbol == "{":
+                        tokens.put(Token(_value=buffer, _token_type=TokenType.NOTE_START,
+                                         _line=current_line, _char=current_char - 1))
                         current_state = State.Note
 
                     elif current_symbol == "" and buffer == "":
@@ -94,12 +100,8 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                             tokens.put(Token(_value=buffer, _token_type=KEYWORDS[buffer],
                                              _line=current_line, _char=current_char - len(buffer)))
 
-                        elif is_identifier(buffer):
-                            tokens.put(Token(_value=buffer, _token_type=TokenType.IDENTIFIER,
-                                             _line=current_line, _char=current_char - len(buffer)))
-
                         else:
-                            tokens.put(Token(_value=buffer, _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
+                            tokens.put(Token(_value=buffer, _token_type=TokenType.IDENTIFIER,
                                              _line=current_line, _char=current_char - len(buffer)))
 
                         buffer = current_symbol
@@ -112,7 +114,8 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                     current_char += 1
 
                     if buffer + current_symbol in ["<>", "<=", ">="]:
-                        tokens.put(Token(_value=buffer, _token_type=DELIMITERS[buffer + current_symbol],
+                        tokens.put(Token(_value=buffer + current_symbol,
+                                         _token_type=DELIMITERS[buffer + current_symbol],
                                          _line=current_line, _char=current_char - 2))
                         buffer = ""
 
@@ -176,6 +179,13 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                 case State.Note:
                     current_symbol = program.read(1)
                     if current_symbol == "}":
+                        buffer = current_symbol
+                        tokens.put(Token(_value=buffer, _token_type=TokenType.NOTE_END,
+                                         _line=current_line, _char=current_char - 1))
+                        buffer = ""
+                        current_state = State.Start
+
+                    elif current_symbol == "":
                         buffer = ""
                         current_state = State.Start
 
@@ -186,7 +196,7 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                     current_char += 1
 
                     if (current_symbol in DELIMITERS.keys() or current_symbol in LETTERS
-                            or current_symbol in TYPES or current_symbol in DIGITS
+                            or current_symbol in TYPES.keys() or current_symbol in DIGITS
                             or current_symbol in WHITESPACES or current_symbol in ["{", "."]):
                         tokens.put(Token(_value=buffer, _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
                                          _line=current_line, _char=current_char - len(buffer)))
@@ -198,9 +208,3 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> Queue[Token]:
                     continue
 
     return tokens
-
-
-def save_tokens(filename: str, queue: Queue[Token], encoding: str = "utf-8"):
-    with open(filename, "w", encoding=encoding) as file:
-        while not queue.empty():
-            file.write(str(queue.get()) + "\n")

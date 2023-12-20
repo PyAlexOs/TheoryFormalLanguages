@@ -1,9 +1,12 @@
 dim a, b, i %
-for i as 0d to i < 10d do [
-    as i / 2d : b as b + i
+for i as 1d to i <= 10d do [
+    a as i / 2d : b as b + iзззз
     if a * 2d = i then
         write(i)
     i as i + 1d
+    {типа комментарий
+    и тут тоже
+    }
 ]
 write(b)
 end

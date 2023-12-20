@@ -2,6 +2,18 @@ from dataclasses import dataclass
 from enum import Enum
 
 
+class State(Enum):
+    EOF = -1
+    Note = 0
+    Start = 1
+
+    Delimiter = 2
+    Identifier = 3
+    Number = 4
+    Type = 5
+    Undefined = 6
+
+
 class TokenType(Enum):
     UNEXPECTED_CHARACTER_SEQUENCE = 0
     END = 1
@@ -50,6 +62,9 @@ class TokenType(Enum):
     SUBTRACTION = 38
     MULTIPLICATION = 39
     DIVISION = 40
+
+    NOTE_START = 41
+    NOTE_END = 42
 
 
 KEYWORDS = {
@@ -121,10 +136,10 @@ class Token:
         self.char = _char
 
     def __str__(self) -> str:
-        return self.token_type.name + "(" + self.value + ") at {" + str(self.line) + ", " + str(self.char) + "}"
+        return str(self.token_type.value) + " " + self.value + " " + str(self.line) + " " + str(self.char)
 
     def __repr__(self) -> str:
-        return self.token_type.name + "\t\t" + self.value
+        return self.token_type.name + "(" + self.value + ") at {" + str(self.line) + ", " + str(self.char) + "}"
 
 
 class IdentifierType(Enum):
@@ -145,11 +160,13 @@ TYPES = {
 class Identifier:
     name: str
     type: IdentifierType
+    value: str
     is_declared: bool
     is_assigned: bool
 
     def __init__(self, _name):
         self.name = _name
+        self.value = ""
         self.type = IdentifierType.UNKNOWN_TYPE
         self.is_assigned = False
         self.is_declared = False

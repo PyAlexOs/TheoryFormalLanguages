@@ -1,4 +1,5 @@
-from tokenizer import get_tokens, save_tokens
+from course_work.file_methods import save_tokens, load_tokens
+from course_work.tokenizer import get_tokens
 import sys
 
 
@@ -11,6 +12,10 @@ def main():
 
     tokens = get_tokens(filename)
     save_tokens(''.join(filename.split(".")[:-1:]) + ".tokenlist", tokens)
+    tokens = load_tokens(''.join(filename.split(".")[:-1:]) + ".tokenlist")
+    while not tokens.is_empty():
+        a = tokens.get()
+        print(a.__repr__())
 
 
 if __name__ == '__main__':
