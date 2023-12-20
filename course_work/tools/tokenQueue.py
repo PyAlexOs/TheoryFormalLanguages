@@ -1,6 +1,4 @@
-import collections
-
-from course_work.structures import Token
+from course_work.tools.structures import Token
 
 
 class TokenQueue:

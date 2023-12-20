@@ -1,5 +1,5 @@
-from course_work.tokenQueue import TokenQueue
-from course_work.structures import State, TokenType, Token
+from course_work.tools.tokenQueue import TokenQueue
+from course_work.tools.structures import TokenType, Token
 
 
 def save_tokens(filename: str, queue: TokenQueue, encoding: str = "utf-8"):
@@ -10,10 +10,6 @@ def save_tokens(filename: str, queue: TokenQueue, encoding: str = "utf-8"):
 
 def load_tokens(filename: str, encoding: str = "utf-8") -> TokenQueue:
     tokens = TokenQueue()
-    _type: int
-    _value: str
-    _line: int
-    _char: int
 
     with open(filename, "r", encoding=encoding) as file:
         for line in file.readlines():
