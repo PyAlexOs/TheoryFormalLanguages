@@ -6,18 +6,17 @@ class EmptyProgramError(Exception):
         return "At least one statement was expected, nothing was found"
 
 
-class OperatorError(Exception):
+class UnexpectedCharacterSequenceError(Exception):
     def __init__(self, *args):
-        if args:
-            self.message = args[0]
-        else:
-            self.message = None
+        super().__init__(*args)
 
     def __str__(self):
-        if self.message:
-
-        else:
-            return ""
+        return "Unexpected character sequence at: " + self.args[0] if self.args else "[parser failed]"
 
 
-raise EmptyProgramException
+class OperatorSyntaxError(Exception):
+    def __init__(self, *args):
+        super().__init__(*args)
+
+
+raise UnexpectedCharacterSequenceError()

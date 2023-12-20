@@ -124,6 +124,7 @@ LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
 
 @dataclass
 class Token:
+    """ Represents a token used to write to a file and read from a file """
     value: str
     token_type: TokenType
     line: int
@@ -158,6 +159,7 @@ TYPES = {
 
 @dataclass
 class Identifier:
+    """ Represents an identifier that is used to control the use of identifiers in the program """
     name: str
     type: IdentifierType
     value: str

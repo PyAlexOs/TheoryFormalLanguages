@@ -17,11 +17,12 @@ def main():
 
     # get tokens from the "filename".tokenlist and parse it
     tokens = load_tokens(''.join(filename.split(".")[:-1:]) + ".tokenlist")
+
+    """while not tokens.is_empty():
+        print(tokens.get().__repr__())"""
+
     parser = Parser(tokens)
     parser.parse()
-
-    while not tokens.is_empty():
-        print(tokens.get().__repr__())
 
 
 if __name__ == '__main__':

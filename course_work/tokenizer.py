@@ -39,7 +39,6 @@ def is_real(token: str) -> bool:
 
 def get_tokens(filename: str, encoding: str = "utf-8") -> TokenQueue:
     """ Splits the source code of the program into tokens """
-
     tokens = TokenQueue()
     current_state = State.Start
     current_symbol = ""
