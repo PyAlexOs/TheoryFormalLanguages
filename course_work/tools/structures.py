@@ -179,24 +179,32 @@ OPERATIONS = {
         [
             ['REAL', 'REAL'],
             ['BOOLEAN', 'BOOLEAN'],
-            ['INTEGER', 'INTEGER']
+            ['INTEGER', 'INTEGER'],
+            ['INTEGER', 'REAL'],
+            ['REAL', 'INTEGER']
         ],
         [
             IdentifierType.BOOLEAN,
             IdentifierType.BOOLEAN,
             IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN
         ]
     ],
     TokenType.NOT_EQUALS: [
         [
             ['REAL', 'REAL'],
             ['BOOLEAN', 'BOOLEAN'],
-            ['INTEGER', 'INTEGER']
+            ['INTEGER', 'INTEGER'],
+            ['INTEGER', 'REAL'],
+            ['REAL', 'INTEGER']
         ],
         [
             IdentifierType.BOOLEAN,
             IdentifierType.BOOLEAN,
             IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN
         ]
     ],
     TokenType.LESS: [

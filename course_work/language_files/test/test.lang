@@ -1,6 +1,12 @@
 dim b, i % : dim a !
+dim bool $
+
 i as 22acH + 22d
 a as i / 2d : b as b + i
+dim pop %
+if bool then [a as 9d {lf,,f,ldldl} : pop as b + b] : else [
+    a as a + 1d     ]
+pop as 1000AAAh
 
 
 for i as 1d to i <= 10d do [
