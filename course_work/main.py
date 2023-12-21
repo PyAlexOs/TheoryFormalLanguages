@@ -18,9 +18,10 @@ def main():
     if not os.path.exists(filename):
         exit("Path doesn't exist.")
 
-    # get tokens from program in the "filename".lang and write it down to the "filename".tokenlist
     tokens = get_tokens(filename)
-    # thaan write tokens to file, get tokens from the "filename".tokenlist file and parse it
+    # get tokens from program in the filename.lang
+    # then write tokens to file, get tokens from the filename.tokenlist or filename.json
+    # and parse it
 
     # save_tokens(''.join(filename.split(".")[:-1:]) + ".tokenlist", tokens)
     save_tokens_json(''.join(filename.split(".")[:-1:]) + ".json", tokens)

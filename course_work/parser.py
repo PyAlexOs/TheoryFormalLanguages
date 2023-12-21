@@ -212,6 +212,15 @@ class Parser:
         if expression.type != IdentifierType.BOOLEAN:
             raise PredicateTypeError(expression.type, line, char)
 
+        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.THEN:
+            raise UnexpectedTokenError(self.tokens.get(), "then")
+
+        self.tokens.get()
+        self.check_operator()
+        if not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.ELSE:
+            self.tokens.get()
+            self.check_operator()
+
     def check_fixed_cycle(self):
         """ Checks whether the fixed cycle operator matches the grammar of the language """
         pass
