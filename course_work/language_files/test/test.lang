@@ -1,6 +1,7 @@
 dim b, i % : dim a !
 dim bool $
 
+i as a + bool
 i as 22acH + 22d
 a as i / 2d : b as b + i
 dim pop %

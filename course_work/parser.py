@@ -16,11 +16,6 @@ from course_work.tools.exceptions import (ModelLanguageError,
                                           ReferencedBeforeAssignmentError)
 
 
-# TODO переделать чтобы тип результата брался по другому
-# TODO conditional errror at then
-# TODO espressions error
-
-
 class Parser:
     """ Implementation of the syntactic and semantic analyzer """
     tokens: TokenQueue
@@ -354,19 +349,25 @@ class Parser:
     def check_expression(self) -> Identifier:
         """ Checks if tokens represents an expression, returns expression result (value and type) """
         identifier1 = self.check_operand()
-        if (self.tokens.is_empty() or self.tokens.front().token_type not in [TokenType.NOT_EQUALS, TokenType.EQUALS,
-                                                                             TokenType.LESS, TokenType.LESS_EQUALS,
+        if (self.tokens.is_empty() or self.tokens.front().token_type not in [TokenType.NOT_EQUALS,
+                                                                             TokenType.EQUALS,
+                                                                             TokenType.LESS,
+                                                                             TokenType.LESS_EQUALS,
                                                                              TokenType.GREATER,
                                                                              TokenType.GREATER_EQUALS]):
-            print(self.tokens.front().token_type.name)
             return identifier1
 
         operator = self.tokens.get()
+        print(str(operator))
         identifier2 = self.check_operand()
-        result = Identifier(_name="",
-                            _type=OPERATIONS[operator.token_type][1][
-                                OPERATIONS[operator.token_type][0].index(
-                                    [identifier1.type.name, identifier2.type.name])])
+        try:
+            result = Identifier(_name="",
+                                _type=OPERATIONS[operator.token_type][1][
+                                    OPERATIONS[operator.token_type][0].index(
+                                        [identifier1.type.name, identifier2.type.name])])
+
+        except ValueError:
+            raise OperationError(identifier1.type, identifier2.type, operator.value)
 
         return result
 
@@ -380,9 +381,13 @@ class Parser:
 
         operator = self.tokens.get()
         summand2 = self.check_summand()
-        result = Identifier(_name="",
-                            _type=OPERATIONS[operator.token_type][1][
-                                OPERATIONS[operator.token_type][0].index([summand1.type.name, summand2.type.name])])
+        try:
+            result = Identifier(_name="",
+                                _type=OPERATIONS[operator.token_type][1][
+                                    OPERATIONS[operator.token_type][0].index([summand1.type.name, summand2.type.name])])
+
+        except ValueError:
+            raise OperationError(summand1.type, summand2.type, operator.value)
 
         return result
 
@@ -396,10 +401,14 @@ class Parser:
 
         operator = self.tokens.get()
         multiplier2 = self.check_multiplier()
-        result = Identifier(_name="",
-                            _type=OPERATIONS[operator.token_type][1][
-                                OPERATIONS[operator.token_type][0].index(
-                                    [multiplier1.type.name, multiplier2.type.name])])
+        try:
+            result = Identifier(_name="",
+                                _type=OPERATIONS[operator.token_type][1][
+                                    OPERATIONS[operator.token_type][0].index(
+                                        [multiplier1.type.name, multiplier2.type.name])])
+
+        except ValueError:
+            raise OperationError(multiplier1.type, multiplier2.type, operator.value)
 
         return result
 
@@ -411,13 +420,22 @@ class Parser:
             if not self.tokens.is_empty() and not self.tokens.front() == TokenType.ARGUMENT_END:
                 raise UnexpectedTokenError(self.tokens.get(), "closing bracket")
 
+            self.tokens.get()
             return multiplier
 
         elif not self.tokens.is_empty() and self.tokens.front() == TokenType.NOT:
             self.tokens.get()
-            return self.check_multiplier()
 
-        elif not self.tokens.is_empty() and self.tokens.front() in [TokenType.FALSE, TokenType.TRUE]:
+            if not self.tokens.is_empty():
+                token = self.tokens.front()
+                multiplier = self.check_multiplier()
+
+                if multiplier.type != IdentifierType.BOOLEAN:
+                    raise UnexpectedTokenError(token, "boolean-type variable")
+
+                return multiplier
+
+        elif not self.tokens.is_empty() and self.tokens.front().token_type in [TokenType.FALSE, TokenType.TRUE]:
             self.tokens.get()
             return Identifier(_name="", _type=IdentifierType.BOOLEAN)
 
