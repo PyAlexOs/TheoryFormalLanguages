@@ -1,5 +1,8 @@
-dim a, b, i %
-i as 1d
+dim b, i % : dim a !
+i as 22acH + 22d
+a as i / 2d : b as b + i
+
+
 for i as 1d to i <= 10d do [
     a as i / 2d : b as b + iзззз
     if a * 2d = i then

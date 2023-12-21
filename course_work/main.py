@@ -1,6 +1,7 @@
 from course_work.tools.file_methods import save_tokens, load_tokens
 from course_work.tokenizer import get_tokens
 from course_work.parser import Parser
+import os
 import sys
 
 
@@ -8,8 +9,11 @@ def main():
     try:
         filename = sys.argv[1]
     except IndexError:
-        # exit("Filename wasn't given.")
+        # filename = input()
         filename = "language_files/test/test.lang"
+
+    if not os.path.exists(filename):
+        exit("Path doesn't exist.")
 
     # get tokens from program in the "filename".lang and write it down to the "filename".tokenlist
     tokens = get_tokens(filename)

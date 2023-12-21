@@ -175,6 +175,12 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> TokenQueue:
 
                 case State.Note:
                     current_symbol = program.read(1)
+                    current_char += 1
+
+                    if current_symbol == "\n":
+                        current_line += 1
+                        current_char = 0
+
                     if current_symbol == "}":
                         buffer = current_symbol
                         tokens.put(Token(_value=buffer, _token_type=TokenType.NOTE_END,

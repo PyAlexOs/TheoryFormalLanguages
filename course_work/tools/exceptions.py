@@ -57,20 +57,10 @@ class UnexpectedCharacterSequenceError(ModelLanguageError):
 
 
 class AssignmentTypeError(ModelLanguageError):
-    def __init__(self, _token: Token, _value: IdentifierType):
+    def __init__(self, _token: Token, _value: IdentifierType, _type: IdentifierType):
         self.token = _token
+        self._type = _type
         self.value = ""
-        self._type = ""
-        match self.token.token_type:
-            case IdentifierType.REAL:
-                self._type = "real"
-
-            case IdentifierType.INTEGER:
-                self._type = "integer"
-
-            case IdentifierType.BOOLEAN:
-                self._type = "boolean"
-
         match _value:
             case IdentifierType.REAL:
                 self.value = "real"
@@ -85,7 +75,7 @@ class AssignmentTypeError(ModelLanguageError):
 
     def __str__(self):
         return ("Incorrect assignment type at " + str(self.token.line) + ":" +
-                str(self.token.char) + ". Trying to assign " + self._type +
+                str(self.token.char) + ". Trying to assign " + self._type.name.lower() +
                 " variable '" + self.token.value + "' with " + self.value + " value")
 
 
@@ -95,4 +85,15 @@ class DeclarationError(ModelLanguageError):
         super().__init__()
 
     def __str__(self):
-        return "Variable '" + self.token.value + "' is not declared yet."
+        return ("Variable '" + self.token.value + "' is not declared yet at " +
+                str(self.token.line) + ":" + str(self.token.char))
+
+
+class ReferencedBeforeAssignmentError(ModelLanguageError):
+    def __init__(self, _token: Token):
+        self.token = _token
+        super().__init__()
+
+    def __str__(self):
+        return ("Variable '" + self.token.value + "' referenced before assignment at " +
+                str(self.token.line) + ":" + str(self.token.char))

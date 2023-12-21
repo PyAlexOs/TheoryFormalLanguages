@@ -177,9 +177,9 @@ class Identifier:
 OPERATIONS = {
     TokenType.EQUALS: [
         [
-            [IdentifierType.REAL, IdentifierType.REAL],
-            [IdentifierType.BOOLEAN, IdentifierType.BOOLEAN],
-            [IdentifierType.INTEGER, IdentifierType.INTEGER]
+            ['REAL', 'REAL'],
+            ['BOOLEAN', 'BOOLEAN'],
+            ['INTEGER', 'INTEGER']
         ],
         [
             IdentifierType.BOOLEAN,
@@ -189,9 +189,9 @@ OPERATIONS = {
     ],
     TokenType.NOT_EQUALS: [
         [
-            [IdentifierType.REAL, IdentifierType.REAL],
-            [IdentifierType.BOOLEAN, IdentifierType.BOOLEAN],
-            [IdentifierType.INTEGER, IdentifierType.INTEGER]
+            ['REAL', 'REAL'],
+            ['BOOLEAN', 'BOOLEAN'],
+            ['INTEGER', 'INTEGER']
         ],
         [
             IdentifierType.BOOLEAN,
@@ -201,10 +201,10 @@ OPERATIONS = {
     ],
     TokenType.LESS: [
         [
-            [IdentifierType.REAL, IdentifierType.REAL],
-            [IdentifierType.INTEGER, IdentifierType.INTEGER],
-            [IdentifierType.INTEGER, IdentifierType.REAL],
-            [IdentifierType.REAL, IdentifierType.INTEGER]
+            ['REAL', 'REAL'],
+            ['INTEGER', 'INTEGER'],
+            ['INTEGER', 'REAL'],
+            ['REAL', 'INTEGER']
         ],
         [
             IdentifierType.BOOLEAN,
@@ -215,10 +215,10 @@ OPERATIONS = {
     ],
     TokenType.LESS_EQUALS: [
         [
-            [IdentifierType.REAL, IdentifierType.REAL],
-            [IdentifierType.INTEGER, IdentifierType.INTEGER],
-            [IdentifierType.INTEGER, IdentifierType.REAL],
-            [IdentifierType.REAL, IdentifierType.INTEGER]
+            ['REAL', 'REAL'],
+            ['INTEGER', 'INTEGER'],
+            ['INTEGER', 'REAL'],
+            ['REAL', 'INTEGER']
         ],
         [
             IdentifierType.BOOLEAN,
@@ -229,10 +229,10 @@ OPERATIONS = {
     ],
     TokenType.GREATER: [
         [
-            [IdentifierType.REAL, IdentifierType.REAL],
-            [IdentifierType.INTEGER, IdentifierType.INTEGER],
-            [IdentifierType.INTEGER, IdentifierType.REAL],
-            [IdentifierType.REAL, IdentifierType.INTEGER]
+            ['REAL', 'REAL'],
+            ['INTEGER', 'INTEGER'],
+            ['INTEGER', 'REAL'],
+            ['REAL', 'INTEGER']
         ],
         [
             IdentifierType.BOOLEAN,
@@ -243,10 +243,10 @@ OPERATIONS = {
     ],
     TokenType.GREATER_EQUALS: [
         [
-            [IdentifierType.REAL, IdentifierType.REAL],
-            [IdentifierType.INTEGER, IdentifierType.INTEGER],
-            [IdentifierType.INTEGER, IdentifierType.REAL],
-            [IdentifierType.REAL, IdentifierType.INTEGER]
+            ['REAL', 'REAL'],
+            ['INTEGER', 'INTEGER'],
+            ['INTEGER', 'REAL'],
+            ['REAL', 'INTEGER']
         ],
         [
             IdentifierType.BOOLEAN,
@@ -258,10 +258,10 @@ OPERATIONS = {
 
     TokenType.ADDITION: [
         [
-            [IdentifierType.REAL, IdentifierType.REAL],
-            [IdentifierType.INTEGER, IdentifierType.INTEGER],
-            [IdentifierType.INTEGER, IdentifierType.REAL],
-            [IdentifierType.REAL, IdentifierType.INTEGER]
+            ['REAL', 'REAL'],
+            ['INTEGER', 'INTEGER'],
+            ['INTEGER', 'REAL'],
+            ['REAL', 'INTEGER']
         ],
         [
             IdentifierType.REAL,
@@ -272,10 +272,10 @@ OPERATIONS = {
     ],
     TokenType.SUBTRACTION: [
         [
-            [IdentifierType.REAL, IdentifierType.REAL],
-            [IdentifierType.INTEGER, IdentifierType.INTEGER],
-            [IdentifierType.INTEGER, IdentifierType.REAL],
-            [IdentifierType.REAL, IdentifierType.INTEGER]
+            ['REAL', 'REAL'],
+            ['INTEGER', 'INTEGER'],
+            ['INTEGER', 'REAL'],
+            ['REAL', 'INTEGER']
         ],
         [
             IdentifierType.REAL,
@@ -286,7 +286,7 @@ OPERATIONS = {
     ],
     TokenType.OR: [
         [
-            [IdentifierType.BOOLEAN, IdentifierType.BOOLEAN]
+            ['BOOLEAN', 'BOOLEAN']
         ],
         [
             IdentifierType.BOOLEAN
@@ -295,10 +295,10 @@ OPERATIONS = {
 
     TokenType.MULTIPLICATION: [
         [
-            [IdentifierType.REAL, IdentifierType.REAL],
-            [IdentifierType.INTEGER, IdentifierType.INTEGER],
-            [IdentifierType.INTEGER, IdentifierType.REAL],
-            [IdentifierType.REAL, IdentifierType.INTEGER]
+            ['REAL', 'REAL'],
+            ['INTEGER', 'INTEGER'],
+            ['INTEGER', 'REAL'],
+            ['REAL', 'INTEGER']
         ],
         [
             IdentifierType.REAL,
@@ -309,10 +309,10 @@ OPERATIONS = {
     ],
     TokenType.DIVISION: [
         [
-            [IdentifierType.REAL, IdentifierType.REAL],
-            [IdentifierType.INTEGER, IdentifierType.INTEGER],
-            [IdentifierType.INTEGER, IdentifierType.REAL],
-            [IdentifierType.REAL, IdentifierType.INTEGER]
+            ['REAL', 'REAL'],
+            ['INTEGER', 'INTEGER'],
+            ['INTEGER', 'REAL'],
+            ['REAL', 'INTEGER']
         ],
         [
             IdentifierType.REAL,
@@ -323,19 +323,10 @@ OPERATIONS = {
     ],
     TokenType.AND: [
         [
-            [IdentifierType.BOOLEAN, IdentifierType.BOOLEAN]
+            ['BOOLEAN', 'BOOLEAN']
         ],
         [
             IdentifierType.BOOLEAN
         ]
-    ],
-
-    TokenType.NOT: [
-        [
-            [IdentifierType.BOOLEAN]
-        ],
-        [
-            IdentifierType.BOOLEAN
-        ]
-    ],
+    ]
 }
