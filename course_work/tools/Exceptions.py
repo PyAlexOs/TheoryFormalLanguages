@@ -1,4 +1,4 @@
-from course_work.tools.structures import Token
+from course_work.tools.structures import Token, TokenType
 
 
 class ModelLanguageError(BaseException):
@@ -31,6 +31,12 @@ class EndOfProgramError(ModelLanguageError):
 class UnexpectedTokenError(ModelLanguageError):
     def __init__(self, _token: Token, _expected: str):
         self.token = _token
+        if self.token.value == ":":
+            self.token.value = "operator delimiter"
+
+        elif self.token.token_type == TokenType.IDENTIFIER:
+            self.token.value = "identifier " + '"' + self.token.value + '"'
+
         self.expected = _expected
         super().__init__()
 

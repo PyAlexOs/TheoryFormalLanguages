@@ -14,13 +14,13 @@ class Parser:
     """ Implementation of the syntactic and semantic analyzer """
     tokens: TokenQueue
     auxiliary_token: Token
-    identifier_table: set[Identifier]
+    identifier_table: list[Identifier]
     operators_average: int
     note_ongoing: bool
 
     def __init__(self, _tokens: TokenQueue):
         self.tokens = _tokens
-        self.identifier_table = set()
+        self.identifier_table = list()
 
         self.operators_average = 0
         self.note_ongoing = False
@@ -28,9 +28,10 @@ class Parser:
     def __call__(self):
         try:
             self.parse()
+            print("The program analysis has been successfully completed. No problems were found.")
         except ModelLanguageError as error:
             print(str(error))
-        print("The program analysis has been successfully completed. No problems were found.")
+            print("The program analysis was terminated with an error.")
 
     def parse(self):
         """ Starts analyzing the program, checks if the program is empty """
@@ -87,11 +88,12 @@ class Parser:
     def check_description(self):
         """ Checks whether the description operation matches the grammar of the language """
         self.auxiliary_token = self.tokens.get()
-        identifier_set = list()
+        identifier_list = list()
         identifiers_type = None
 
         while not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.IDENTIFIER:
-            identifier_set.append(self.tokens.get())
+            self.auxiliary_token = self.tokens.front()
+            identifier_list.append(self.tokens.get())
             if not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.ARGUMENT_DELIMITER:
                 self.tokens.get()
 
@@ -100,21 +102,25 @@ class Parser:
                 break
 
             else:
+                message = "Identifier or type"
+                if not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.IDENTIFIER:
+                    message = "Comma"
+
                 raise UnexpectedTokenError(self.tokens.get() if not self.tokens.is_empty()
                                            else Token(_value="nothing was",
                                                       _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
                                                       _line=self.auxiliary_token.line,
                                                       _char=self.auxiliary_token.char + len(
                                                           self.auxiliary_token.value)),
-                                           "identifier or type")
+                                           message)
 
-        if len(identifier_set) == 0:
+        if len(identifier_list) == 0:
             raise UnexpectedTokenError(self.tokens.get() if not self.tokens.is_empty()
                                        else Token(_value="nothing was",
                                                   _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
                                                   _line=self.auxiliary_token.line,
                                                   _char=self.auxiliary_token.char + len(self.auxiliary_token.value)),
-                                       "identifier")
+                                       "Identifier")
 
         if not identifiers_type:
             raise UnexpectedTokenError(self.tokens.get() if not self.tokens.is_empty()
@@ -122,14 +128,17 @@ class Parser:
                                                   _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
                                                   _line=self.auxiliary_token.line,
                                                   _char=self.auxiliary_token.char + len(self.auxiliary_token.value)),
-                                       "type")
+                                       "Type")
 
-        for identifier in set(identifier_set):
+        for identifier in identifier_list:
             for existing_id in self.identifier_table:
                 if identifier.value == existing_id.name:
                     self.identifier_table.remove(existing_id)
                     break
-            self.identifier_table.add(Identifier(_name=identifier.value, _type=identifiers_type))
+            self.identifier_table.append(Identifier(_name=identifier.value, _type=identifiers_type))
+
+        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER:
+            raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_operator(self):
         """ Checks whether the operator matches the grammar of the language """
