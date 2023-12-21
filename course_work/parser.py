@@ -17,6 +17,8 @@ from course_work.tools.exceptions import (ModelLanguageError,
 
 
 # TODO переделать чтобы тип результата брался по другому
+# TODO conditional errror at then
+# TODO espressions error
 
 
 class Parser:
@@ -153,39 +155,40 @@ class Parser:
 
     def check_operator(self):
         """ Checks whether the operator matches the grammar of the language """
-        token = self.tokens.front()
-        self.note_ongoing = False
-        if token.token_type == TokenType.BLOCK_START:
-            self.check_compound()
+        if not self.tokens.is_empty():
+            token = self.tokens.front()
+            self.note_ongoing = False
+            if token.token_type == TokenType.BLOCK_START:
+                self.check_compound()
 
-        elif token.token_type == TokenType.IDENTIFIER:
-            self.check_assignment()
+            elif token.token_type == TokenType.IDENTIFIER:
+                self.check_assignment()
 
-        elif token.token_type == TokenType.IF:
-            self.check_conditional()
+            elif token.token_type == TokenType.IF:
+                self.check_conditional()
 
-        elif token.token_type == TokenType.FOR:
-            self.check_fixed_cycle()
+            elif token.token_type == TokenType.FOR:
+                self.check_fixed_cycle()
 
-        elif token.token_type == TokenType.WHILE:
-            self.check_conditional_cycle()
+            elif token.token_type == TokenType.WHILE:
+                self.check_conditional_cycle()
 
-        elif token.token_type == TokenType.READ or token == TokenType.WRITE:
-            self.check_read_write()
+            elif token.token_type == TokenType.READ or token == TokenType.WRITE:
+                self.check_read_write()
 
-        elif self.tokens.front().token_type == TokenType.NOTE_START:
-            self.note_ongoing = True
-            self.tokens.get()
-            if not self.tokens.is_empty():
-                next_token = self.tokens.get()
-                if next_token.token_type != TokenType.NOTE_END:
-                    raise UnexpectedTokenError(next_token, "End of note")
+            elif self.tokens.front().token_type == TokenType.NOTE_START:
+                self.note_ongoing = True
+                self.tokens.get()
+                if not self.tokens.is_empty():
+                    next_token = self.tokens.get()
+                    if next_token.token_type != TokenType.NOTE_END:
+                        raise UnexpectedTokenError(next_token, "End of note")
 
-        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER:
-            if (self.tokens.front().token_type != TokenType.BLOCK_END
-                    and not self.note_ongoing
-                    and self.tokens.front().token_type != TokenType.NOTE_START):
-                raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
+            if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER:
+                if (self.tokens.front().token_type != TokenType.BLOCK_END
+                        and not self.note_ongoing
+                        and self.tokens.front().token_type != TokenType.NOTE_START):
+                    raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_compound(self):
         """ Checks whether the compound operator matches the grammar of the language """
@@ -264,11 +267,46 @@ class Parser:
 
     def check_fixed_cycle(self):
         """ Checks whether the fixed cycle operator matches the grammar of the language """
-        pass
+        self.tokens.get()
+        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.IDENTIFIER:
+            raise UnexpectedTokenError(self.tokens.get(), "identifier")
+
+        self.check_assignment()
+        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.TO:
+            raise UnexpectedTokenError(self.tokens.get(), "to")
+
+        self.tokens.get()
+        if not self.tokens.is_empty():
+            line = self.tokens.front().line
+            char = self.tokens.get().char
+            expression = self.check_expression()
+
+            if expression.type != IdentifierType.BOOLEAN:
+                raise PredicateTypeError(expression.type, line, char)
+
+            if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.DO:
+                raise UnexpectedTokenError(self.tokens.get(), "do")
+
+            self.tokens.get()
+            self.check_operator()
 
     def check_conditional_cycle(self):
         """ Checks whether the conditional cycle operator matches the grammar of the language """
-        pass
+        self.tokens.get()
+
+        if not self.tokens.is_empty():
+            line = self.tokens.front().line
+            char = self.tokens.get().char
+            expression = self.check_expression()
+
+            if expression.type != IdentifierType.BOOLEAN:
+                raise PredicateTypeError(expression.type, line, char)
+
+            if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.DO:
+                raise UnexpectedTokenError(self.tokens.get(), "do")
+
+            self.tokens.get()
+            self.check_operator()
 
     def check_read_write(self):
         """ Checks whether the read or write operator matches the grammar of the language """
@@ -320,6 +358,7 @@ class Parser:
                                                                              TokenType.LESS, TokenType.LESS_EQUALS,
                                                                              TokenType.GREATER,
                                                                              TokenType.GREATER_EQUALS]):
+            print(self.tokens.front().token_type.name)
             return identifier1
 
         operator = self.tokens.get()

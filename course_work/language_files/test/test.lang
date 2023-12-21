@@ -10,8 +10,9 @@ pop as 1000AAAh
 
 
 for i as 1d to i <= 10d do [
-    a as i / 2d : b as b + iзззз
+    a as i / 2d : b as b + i
     if a * 2d = i then
+
         write(i)
     i as i + 1d
     {типа комментарий

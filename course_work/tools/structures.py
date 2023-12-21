@@ -171,7 +171,8 @@ class Identifier:
         self.is_assigned = False
 
     def __str__(self) -> str:
-        return self.type.name + "\t" + self.name + "\t is " + ("not " if self.is_assigned else "") + "assigned"
+        return (self.name + "\t" + self.type.name + "\t" + self.name +
+                "\t is " + ("not " if self.is_assigned else "") + "assigned")
 
 
 OPERATIONS = {
