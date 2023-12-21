@@ -2,12 +2,15 @@ from course_work.tools.tokenQueue import TokenQueue
 from course_work.tools.structures import (TokenType,
                                           Token,
                                           IdentifierType,
-                                          Identifier)
+                                          Identifier,
+                                          OPERATIONS)
 from course_work.tools.exceptions import (ModelLanguageError,
                                           EmptyProgramError,
                                           EndOfProgramError,
                                           UnexpectedTokenError,
-                                          UnexpectedCharacterSequenceError)
+                                          UnexpectedCharacterSequenceError,
+                                          AssignmentTypeError,
+                                          DeclarationError)
 
 
 class Parser:
@@ -142,7 +145,7 @@ class Parser:
 
     def check_operator(self):
         """ Checks whether the operator matches the grammar of the language """
-        token = self.tokens.get()
+        token = self.tokens.front()
         if token == TokenType.BLOCK_START:
             self.check_compound()
 
@@ -170,7 +173,27 @@ class Parser:
 
     def check_assignment(self):
         """ Checks whether the assignment operator matches the grammar of the language """
-        pass
+        identifier = self.tokens.get()
+        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.AS:
+            raise UnexpectedTokenError(self.tokens.get(), "assignment operator")
+
+        self.tokens.get()
+        new_value = None
+        if not self.tokens.is_empty():
+            new_value = self.check_expression()
+
+        if new_value:
+            flag = False
+            for existing_id in self.identifier_table:
+                if identifier.value == existing_id.name:
+                    flag = True
+                    existing_id.is_assigned = True
+                    existing_id.value = new_value.value
+                    if existing_id.type != new_value.type:
+                        raise AssignmentTypeError(identifier, new_value.type)
+
+            if not flag:
+                raise DeclarationError(identifier)
 
     def check_conditional(self):
         """ Checks whether the conditional operator matches the grammar of the language """
@@ -186,6 +209,7 @@ class Parser:
 
     def check_read_write(self):
         """ Checks whether the read or write operator matches the grammar of the language """
+        self.tokens.get()
         if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.ARGUMENT_START:
             message = "arguments"
             if self.tokens.front().token_type == TokenType.IDENTIFIER:
@@ -226,15 +250,37 @@ class Parser:
                                                   _char=self.auxiliary_token.char + len(self.auxiliary_token.value)),
                                        "Identifier")
 
-    def is_expression(self):
-        """ Checks if tokens represents an expression """
-        pass
+    def check_expression(self) -> Identifier:
+        """ Checks if tokens represents an expression, returns expression result (value and type) """
+        identifier1 = self.check_operand()
+        if (self.tokens.is_empty() or self.tokens.front().token_type not in [TokenType.NOT_EQUALS, TokenType.EQUALS,
+                                                                             TokenType.LESS, TokenType.LESS_EQUALS,
+                                                                             TokenType.GREATER,
+                                                                             TokenType.GREATER_EQUALS]):
+            return identifier1
 
-    def is_operand(self):
+        identifier2 = self.check_operand()
+
+        result = Identifier(_name="", _type=IdentifierType.BOOLEAN)
+
+        return result
+
+    def check_operand(self) -> Identifier:
         """ Checks if tokens represents an operand """
-        pass
+        summand1 = self.check_summand()
+        if (self.tokens.is_empty() or self.tokens.front().token_type not in [TokenType.SUBTRACTION,
+                                                                             TokenType.ADDITION,
+                                                                             TokenType.OR]):
+            return summand1
 
-    def is_summand(self):
+        summand2 = self.check_summand()
+        _type = IdentifierType.BOOLEAN
+        if summa
+
+        result = Identifier(_name="", _type=_type)
+        return result
+
+    def check_summand(self) -> Identifier:
         """ Checks if tokens represents a summand """
         pass
 

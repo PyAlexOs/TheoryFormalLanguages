@@ -172,3 +172,170 @@ class Identifier:
 
     def __str__(self) -> str:
         return self.type.name + "\t" + self.name + "\t is " + ("not " if self.is_assigned else "") + "assigned"
+
+
+OPERATIONS = {
+    TokenType.EQUALS: [
+        [
+            [IdentifierType.REAL, IdentifierType.REAL],
+            [IdentifierType.BOOLEAN, IdentifierType.BOOLEAN],
+            [IdentifierType.INTEGER, IdentifierType.INTEGER]
+        ],
+        [
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+        ]
+    ],
+    TokenType.NOT_EQUALS: [
+        [
+            [IdentifierType.REAL, IdentifierType.REAL],
+            [IdentifierType.BOOLEAN, IdentifierType.BOOLEAN],
+            [IdentifierType.INTEGER, IdentifierType.INTEGER]
+        ],
+        [
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+        ]
+    ],
+    TokenType.LESS: [
+        [
+            [IdentifierType.REAL, IdentifierType.REAL],
+            [IdentifierType.INTEGER, IdentifierType.INTEGER],
+            [IdentifierType.INTEGER, IdentifierType.REAL],
+            [IdentifierType.REAL, IdentifierType.INTEGER]
+        ],
+        [
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+        ]
+    ],
+    TokenType.LESS_EQUALS: [
+        [
+            [IdentifierType.REAL, IdentifierType.REAL],
+            [IdentifierType.INTEGER, IdentifierType.INTEGER],
+            [IdentifierType.INTEGER, IdentifierType.REAL],
+            [IdentifierType.REAL, IdentifierType.INTEGER]
+        ],
+        [
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+        ]
+    ],
+    TokenType.GREATER: [
+        [
+            [IdentifierType.REAL, IdentifierType.REAL],
+            [IdentifierType.INTEGER, IdentifierType.INTEGER],
+            [IdentifierType.INTEGER, IdentifierType.REAL],
+            [IdentifierType.REAL, IdentifierType.INTEGER]
+        ],
+        [
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+        ]
+    ],
+    TokenType.GREATER_EQUALS: [
+        [
+            [IdentifierType.REAL, IdentifierType.REAL],
+            [IdentifierType.INTEGER, IdentifierType.INTEGER],
+            [IdentifierType.INTEGER, IdentifierType.REAL],
+            [IdentifierType.REAL, IdentifierType.INTEGER]
+        ],
+        [
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+            IdentifierType.BOOLEAN,
+        ]
+    ],
+
+    TokenType.ADDITION: [
+        [
+            [IdentifierType.REAL, IdentifierType.REAL],
+            [IdentifierType.INTEGER, IdentifierType.INTEGER],
+            [IdentifierType.INTEGER, IdentifierType.REAL],
+            [IdentifierType.REAL, IdentifierType.INTEGER]
+        ],
+        [
+            IdentifierType.REAL,
+            IdentifierType.INTEGER,
+            IdentifierType.REAL,
+            IdentifierType.REAL
+        ]
+    ],
+    TokenType.SUBTRACTION: [
+        [
+            [IdentifierType.REAL, IdentifierType.REAL],
+            [IdentifierType.INTEGER, IdentifierType.INTEGER],
+            [IdentifierType.INTEGER, IdentifierType.REAL],
+            [IdentifierType.REAL, IdentifierType.INTEGER]
+        ],
+        [
+            IdentifierType.REAL,
+            IdentifierType.INTEGER,
+            IdentifierType.REAL,
+            IdentifierType.REAL
+        ]
+    ],
+    TokenType.OR: [
+        [
+            [IdentifierType.BOOLEAN, IdentifierType.BOOLEAN]
+        ],
+        [
+            IdentifierType.BOOLEAN
+        ]
+    ],
+
+    TokenType.MULTIPLICATION: [
+        [
+            [IdentifierType.REAL, IdentifierType.REAL],
+            [IdentifierType.INTEGER, IdentifierType.INTEGER],
+            [IdentifierType.INTEGER, IdentifierType.REAL],
+            [IdentifierType.REAL, IdentifierType.INTEGER]
+        ],
+        [
+            IdentifierType.REAL,
+            IdentifierType.INTEGER,
+            IdentifierType.REAL,
+            IdentifierType.REAL
+        ]
+    ],
+    TokenType.DIVISION: [
+        [
+            [IdentifierType.REAL, IdentifierType.REAL],
+            [IdentifierType.INTEGER, IdentifierType.INTEGER],
+            [IdentifierType.INTEGER, IdentifierType.REAL],
+            [IdentifierType.REAL, IdentifierType.INTEGER]
+        ],
+        [
+            IdentifierType.REAL,
+            IdentifierType.REAL,
+            IdentifierType.REAL,
+            IdentifierType.REAL
+        ]
+    ],
+    TokenType.AND: [
+        [
+            [IdentifierType.BOOLEAN, IdentifierType.BOOLEAN]
+        ],
+        [
+            IdentifierType.BOOLEAN
+        ]
+    ],
+
+    TokenType.NOT: [
+        [
+            [IdentifierType.BOOLEAN]
+        ],
+        [
+            IdentifierType.BOOLEAN
+        ]
+    ],
+}
