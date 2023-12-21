@@ -9,11 +9,13 @@ from course_work.tools.exceptions import (ModelLanguageError,
                                           EndOfProgramError,
                                           UnexpectedTokenError,
                                           UnexpectedCharacterSequenceError,
-                                            OperationError,
-                                            PredicateTypeError,
+                                          OperationError,
+                                          PredicateTypeError,
                                           AssignmentTypeError,
                                           DeclarationError,
                                           ReferencedBeforeAssignmentError)
+
+
 # TODO переделать чтобы тип результата брался по другому
 
 
@@ -111,6 +113,7 @@ class Parser:
 
             else:
                 message = "Identifier or type"
+                print(self.tokens.front().token_type)
                 if not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.IDENTIFIER:
                     message = "Comma"
 
@@ -202,10 +205,12 @@ class Parser:
 
     def check_conditional(self):
         """ Checks whether the conditional operator matches the grammar of the language """
-        self.tokens.get()
+        line = self.tokens.front().line
+        char = self.tokens.get().char
         expression = self.check_expression()
+
         if expression.type != IdentifierType.BOOLEAN:
-            raise PredicateTypeError(expression.type, self.auxiliary_token.line, self.auxiliary_token.char)
+            raise PredicateTypeError(expression.type, line, char)
 
     def check_fixed_cycle(self):
         """ Checks whether the fixed cycle operator matches the grammar of the language """
@@ -271,7 +276,8 @@ class Parser:
         identifier2 = self.check_operand()
         result = Identifier(_name="",
                             _type=OPERATIONS[operator.token_type][1][
-                                OPERATIONS[operator.token_type][0].index([identifier1.type.name, identifier2.type.name])])
+                                OPERATIONS[operator.token_type][0].index(
+                                    [identifier1.type.name, identifier2.type.name])])
 
         return result
 
@@ -303,7 +309,8 @@ class Parser:
         multiplier2 = self.check_multiplier()
         result = Identifier(_name="",
                             _type=OPERATIONS[operator.token_type][1][
-                                OPERATIONS[operator.token_type][0].index([multiplier1.type.name, multiplier2.type.name])])
+                                OPERATIONS[operator.token_type][0].index(
+                                    [multiplier1.type.name, multiplier2.type.name])])
 
         return result
 
