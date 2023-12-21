@@ -22,7 +22,7 @@ def main():
         print(tokens.get().__repr__())"""
 
     parser = Parser(tokens)
-    parser.parse()
+    parser()
 
 
 if __name__ == '__main__':

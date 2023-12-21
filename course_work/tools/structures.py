@@ -144,7 +144,6 @@ class Token:
 
 
 class IdentifierType(Enum):
-    UNKNOWN_TYPE = 0
     INTEGER = 1
     REAL = 2
     BOOLEAN = 3
@@ -163,16 +162,13 @@ class Identifier:
     name: str
     type: IdentifierType
     value: str
-    is_declared: bool
     is_assigned: bool
 
-    def __init__(self, _name):
+    def __init__(self, _name, _type):
         self.name = _name
+        self.type = _type
         self.value = ""
-        self.type = IdentifierType.UNKNOWN_TYPE
         self.is_assigned = False
-        self.is_declared = False
 
     def __str__(self) -> str:
-        return self.type.name + "\t" + self.name + "\t" + ("is assigned" if self.is_assigned else
-                                                           ("is declared" if self.is_declared else "UNKNOWN"))
+        return self.type.name + "\t" + self.name + "\t is " + ("not " if self.is_assigned else "") + "assigned"
