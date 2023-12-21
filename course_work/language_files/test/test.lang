@@ -1,4 +1,5 @@
 dim a, b, i %
+i as 1d
 for i as 1d to i <= 10d do [
     a as i / 2d : b as b + iзззз
     if a * 2d = i then

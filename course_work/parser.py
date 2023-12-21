@@ -3,7 +3,7 @@ from course_work.tools.structures import (TokenType,
                                           Token,
                                           IdentifierType,
                                           Identifier)
-from course_work.tools.Exceptions import (ModelLanguageError,
+from course_work.tools.exceptions import (ModelLanguageError,
                                           EmptyProgramError,
                                           EndOfProgramError,
                                           UnexpectedTokenError,
@@ -142,4 +142,122 @@ class Parser:
 
     def check_operator(self):
         """ Checks whether the operator matches the grammar of the language """
+        token = self.tokens.get()
+        if token == TokenType.BLOCK_START:
+            self.check_compound()
+
+        elif token == TokenType.IDENTIFIER:
+            self.check_assignment()
+
+        elif token == TokenType.IF:
+            self.check_conditional()
+
+        elif token == TokenType.FOR:
+            self.check_fixed_cycle()
+
+        elif token == TokenType.WHILE:
+            self.check_conditional_cycle()
+
+        elif token == TokenType.READ or token == TokenType.WRITE:
+            self.check_read_write()
+
+        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER:
+            raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
+
+    def check_compound(self):
+        """ Checks whether the compound operator matches the grammar of the language """
+        pass
+
+    def check_assignment(self):
+        """ Checks whether the assignment operator matches the grammar of the language """
+        pass
+
+    def check_conditional(self):
+        """ Checks whether the conditional operator matches the grammar of the language """
+        pass
+
+    def check_fixed_cycle(self):
+        """ Checks whether the fixed cycle operator matches the grammar of the language """
+        pass
+
+    def check_conditional_cycle(self):
+        """ Checks whether the conditional cycle operator matches the grammar of the language """
+        pass
+
+    def check_read_write(self):
+        """ Checks whether the read or write operator matches the grammar of the language """
+        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.ARGUMENT_START:
+            message = "arguments"
+            if self.tokens.front().token_type == TokenType.IDENTIFIER:
+                message = "opening bracket"
+
+            raise UnexpectedTokenError(self.tokens.get(), message)
+
         self.tokens.get()
+        count = 0
+        while not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.IDENTIFIER:
+            count += 1
+            self.auxiliary_token = self.tokens.get()
+            if not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.ARGUMENT_DELIMITER:
+                self.tokens.get()
+
+            elif not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.ARGUMENT_END:
+                self.tokens.get()
+                break
+
+            else:
+                message = "Identifier or closing bracket"
+                if not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.IDENTIFIER:
+                    message = "Comma"
+
+                raise UnexpectedTokenError(self.tokens.get() if not self.tokens.is_empty()
+                                           else Token(_value="nothing was",
+                                                      _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
+                                                      _line=self.auxiliary_token.line,
+                                                      _char=self.auxiliary_token.char + len(
+                                                          self.auxiliary_token.value)),
+                                           message)
+
+        if count == 0:
+            raise UnexpectedTokenError(self.tokens.get() if not self.tokens.is_empty()
+                                       else Token(_value="nothing was",
+                                                  _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
+                                                  _line=self.auxiliary_token.line,
+                                                  _char=self.auxiliary_token.char + len(self.auxiliary_token.value)),
+                                       "Identifier")
+
+    def is_expression(self):
+        """ Checks if tokens represents an expression """
+        pass
+
+    def is_operand(self):
+        """ Checks if tokens represents an operand """
+        pass
+
+    def is_summand(self):
+        """ Checks if tokens represents a summand """
+        pass
+
+    def check_multiplier(self):
+        """ Checks if tokens represents a multiplier """
+        token = self.tokens.front()
+
+        if token.token_type != TokenType.ARGUMENT_START:
+            if token.token_type != TokenType.NOT:
+                if (token.token_type not in [TokenType.IDENTIFIER, TokenType.TRUE, TokenType.FALSE] and
+                        not self.check_number()):
+                    raise UnexpectedTokenError(token, "identifier or logical constant")
+            else:
+                self.tokens.get()
+                self.check_multiplier()
+
+        else:
+            pass
+
+    def check_number(self):
+        """ Checks if the token represents a number """
+        token = self.tokens.front()
+        if not (token.token_type == TokenType.BINARY or token.token_type == TokenType.OCTAL or
+                token.token_type == TokenType.DECIMAL or token.token_type == TokenType.HEXADECIMAL or
+                token.token_type == TokenType.REAL):
+            raise UnexpectedTokenError(token, "number")
