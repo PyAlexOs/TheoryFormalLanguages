@@ -9,6 +9,8 @@ from course_work.tools.exceptions import (ModelLanguageError,
                                           EndOfProgramError,
                                           UnexpectedTokenError,
                                           UnexpectedCharacterSequenceError,
+                                            OperationError,
+                                            PredicateTypeError,
                                           AssignmentTypeError,
                                           DeclarationError,
                                           ReferencedBeforeAssignmentError)
@@ -202,6 +204,8 @@ class Parser:
         """ Checks whether the conditional operator matches the grammar of the language """
         self.tokens.get()
         expression = self.check_expression()
+        if expression.type != IdentifierType.BOOLEAN:
+            raise PredicateTypeError(expression.type, self.auxiliary_token.line, self.auxiliary_token.char)
 
     def check_fixed_cycle(self):
         """ Checks whether the fixed cycle operator matches the grammar of the language """

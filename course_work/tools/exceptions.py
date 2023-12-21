@@ -56,6 +56,30 @@ class UnexpectedCharacterSequenceError(ModelLanguageError):
                 str(self.token.char) + " " + self.token.value)
 
 
+class OperationError(ModelLanguageError): # not used yet
+    def __init__(self, type1: IdentifierType, type2: IdentifierType, operator: str):
+        self.type1 = type1
+        self.type2 = type2
+        self.operator = operator
+        super().__init__()
+
+    def __str__(self):
+        return ("Incorrect operator " + self.operator + " for operands with " +
+                self.type1.name.lower() + " and " + self.type2.name.lower() + " types")
+
+
+class PredicateTypeError(ModelLanguageError):
+    def __init__(self, _type: IdentifierType, line: int, char: int):
+        self._type = _type
+        self.line = line
+        self.char = char
+        super().__init__()
+
+    def __str__(self):
+        return ("Incorrect predicate at " + str(self.line) + ":" + str(self.char) +
+                ". Expected for boolean, found " + self._type.name.lower())
+
+
 class AssignmentTypeError(ModelLanguageError):
     def __init__(self, _token: Token, _value: IdentifierType, _type: IdentifierType):
         self.token = _token
