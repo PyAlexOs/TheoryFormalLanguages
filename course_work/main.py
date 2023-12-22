@@ -14,7 +14,7 @@ def main():
         python ./course_work/main.py course_work/language_files//.lang
         python ./course_work/main.py course_work/language_files//.lang
         python ./course_work/main.py course_work/language_files//.lang
-        python ./course_work/main.py course_work/language_files//.lang
+        python ./course_work/main.py course_work/language_files/test.lang
     """
     try:
         filename = sys.argv[1]

@@ -110,12 +110,14 @@ class AssignmentTypeError(ModelLanguageError):
 
 
 class ReferencedBeforeAssignmentError(ModelLanguageError):
-    def __init__(self, _token: Token):
+    def __init__(self, _token: Token, _flag: bool):
         self.token = _token
+        self.flag = _flag
         super().__init__()
 
     def __str__(self):
-        return ("Variable '" + self.token.value + "' referenced before assignment at " +
+        return ("Variable '" + self.token.value + "' referenced before " +
+                ("assignment" if self.flag else "declaration") + " at " +
                 str(self.token.line) + ":" + str(self.token.char))
 
 

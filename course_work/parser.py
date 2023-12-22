@@ -44,7 +44,7 @@ class Parser:
         except ModelLanguageError as error:
             print("The program analysis was terminated with the following error:")
             print(str(error))
-            raise error
+            # raise error
 
     def parse(self):
         """ Starts analyzing the program, checks if the program is empty """
@@ -246,7 +246,7 @@ class Parser:
                 self.waiting_for = existing_id.type
 
         if not flag:
-            raise ReferencedBeforeAssignmentError(identifier)
+            raise ReferencedBeforeAssignmentError(identifier, True)
 
         new_value = self.check_expression()
         if new_value:
@@ -338,7 +338,10 @@ class Parser:
 
     def check_read_write(self):
         """ Checks whether the read or write operator matches the grammar of the language """
-        self.tokens.get()
+        to_initialize = True
+        if self.tokens.get().token_type == TokenType.WRITE:
+            to_initialize = False
+
         if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.ARGUMENT_START:
             message = "arguments"
             if self.tokens.front().token_type == TokenType.IDENTIFIER:
@@ -347,10 +350,10 @@ class Parser:
             raise UnexpectedTokenError(self.tokens.get(), message)
 
         self.tokens.get()
-        count = 0
+        identifier_list = list()
         while not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.IDENTIFIER:
-            count += 1
             self.auxiliary_token = self.tokens.get()
+            identifier_list.append(self.auxiliary_token)
             if not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.ARGUMENT_DELIMITER:
                 self.tokens.get()
 
@@ -371,7 +374,7 @@ class Parser:
                                                           self.auxiliary_token.value)),
                                            message)
 
-        if count == 0:
+        if len(identifier_list) == 0:
             raise UnexpectedTokenError(self.tokens.get() if not self.tokens.is_empty()
                                        else Token(_value="nothing was",
                                                   _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
@@ -379,7 +382,30 @@ class Parser:
                                                   _char=self.auxiliary_token.char + len(self.auxiliary_token.value)),
                                        "Identifier")
 
-        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER and self.block == 0:
+        flags: list[bool] = [False for _ in range(len(identifier_list))]
+
+        if to_initialize:
+            for (i, identifier) in enumerate(identifier_list):
+                for existing_id in self.identifier_table:
+                    if existing_id.name == identifier.value:
+                        existing_id.is_assigned = True
+                        flags[i] = True
+
+            if not all(flags):
+                raise ReferencedBeforeAssignmentError(identifier_list[flags.index(False)], False)
+
+        else:
+            for (i, identifier) in enumerate(identifier_list):
+                for existing_id in self.identifier_table:
+                    if existing_id.name == identifier.value:
+                        if existing_id.is_assigned:
+                            flags[i] = True
+
+            if not all(flags):
+                raise ReferencedBeforeAssignmentError(identifier_list[flags.index(False)], True)
+
+        if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
+                and self.block == 0):
             raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_expression(self) -> Identifier:
@@ -489,7 +515,7 @@ class Parser:
                     break
 
             if not flag:
-                raise ReferencedBeforeAssignmentError(token)
+                raise ReferencedBeforeAssignmentError(token, True)
 
             return Identifier(_name="", _type=_type)
 
