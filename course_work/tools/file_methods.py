@@ -1,6 +1,9 @@
 import json
-from course_work.tools.tokenQueue import TokenQueue
-from course_work.tools.structures import IdentifierType, TYPES, TokenType, Token
+from .tokenQueue import TokenQueue
+from .structures import (IdentifierType,
+                        TYPES,
+                        TokenType,
+                        Token)
 
 
 def save_tokens(filename: str, queue: TokenQueue, encoding: str = "utf-8"):

@@ -1,4 +1,7 @@
-from course_work.tools.structures import Token, TokenType, IdentifierType
+from .structures import (Token,
+                         TokenType,
+                         Identifier,
+                         IdentifierType)
 
 
 class ModelLanguageError(BaseException):
@@ -114,3 +117,14 @@ class ReferencedBeforeAssignmentError(ModelLanguageError):
     def __str__(self):
         return ("Variable '" + self.token.value + "' referenced before assignment at " +
                 str(self.token.line) + ":" + str(self.token.char))
+
+
+class ReDescriptionError(ModelLanguageError):
+    def __init__(self, _token: Token, _old: Identifier):
+        self.token = _token
+        self.identifier = _old
+        super().__init__()
+
+    def __str__(self):
+        return ("Declaration error at " + str(self.token.line) + ":" + str(self.token.char)
+                + ". Variable '" + self.identifier.name + "' already declared.")

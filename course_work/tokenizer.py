@@ -1,14 +1,14 @@
-from course_work.tools.structures import (State,
-                                          Token,
-                                          TokenType,
-                                          DELIMITERS,
-                                          LETTERS,
-                                          DIGITS,
-                                          EXTENDED_DIGITS,
-                                          WHITESPACES,
-                                          TYPES,
-                                          KEYWORDS)
-from course_work.tools.tokenQueue import TokenQueue
+from tools.structures import (State,
+                              Token,
+                              TokenType,
+                              DELIMITERS,
+                              LETTERS,
+                              DIGITS,
+                              EXTENDED_DIGITS,
+                              WHITESPACES,
+                              TYPES,
+                              KEYWORDS)
+from tools.tokenQueue import TokenQueue
 import re
 
 
@@ -24,7 +24,7 @@ def is_octal(token: str) -> bool:
 
 def is_decimal(token: str) -> bool:
     """ Checks if the token is decimal """
-    return re.match(r"^\d+[Dd]$", token) is not None
+    return re.match(r"^\d+[Dd]?$", token) is not None
 
 
 def is_hexadecimal(token: str) -> bool:

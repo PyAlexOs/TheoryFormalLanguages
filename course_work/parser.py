@@ -1,21 +1,20 @@
-from course_work.tools.tokenQueue import TokenQueue
-from course_work.tools.structures import (TokenType,
-                                          Token,
-                                          IdentifierType,
-                                          Identifier,
-                                          OPERATIONS)
-from course_work.tools.exceptions import (ModelLanguageError,
-                                          EmptyProgramError,
-                                          EndOfProgramError,
-                                          UnexpectedTokenError,
-                                          UnexpectedCharacterSequenceError,
-                                          OperationError,
-                                          PredicateTypeError,
-                                          AssignmentTypeError,
-                                          ReferencedBeforeAssignmentError)
+from tools.tokenQueue import TokenQueue
+from tools.structures import (TokenType,
+                              Token,
+                              IdentifierType,
+                              Identifier,
+                              OPERATIONS)
+from tools.exceptions import (ModelLanguageError,
+                              EmptyProgramError,
+                              EndOfProgramError,
+                              UnexpectedTokenError,
+                              UnexpectedCharacterSequenceError,
+                              OperationError,
+                              PredicateTypeError,
+                              AssignmentTypeError,
+                              ReferencedBeforeAssignmentError,
+                              ReDescriptionError)
 
-
-#  TODO начинает искать выражение перед "<=" в обоих циклах
 
 class Parser:
     """ Implementation of the syntactic and semantic analyzer """
@@ -24,22 +23,28 @@ class Parser:
     identifier_table: list[Identifier]
     operators_average: int
     note_ongoing: bool
+    block: int
     waiting_for: IdentifierType
+    last: TokenType
 
     def __init__(self, _tokens: TokenQueue):
         self.tokens = _tokens
         self.identifier_table = list()
 
         self.operators_average = 0
+        self.block = 0
+        self.last = TokenType.UNEXPECTED_CHARACTER_SEQUENCE
         self.note_ongoing = False
 
     def __call__(self):
         try:
             self.parse()
             print("The program analysis has been successfully completed. No problems were found.")
+
         except ModelLanguageError as error:
+            print("The program analysis was terminated with the following error:")
             print(str(error))
-            print("The program analysis was terminated with an error.")
+            raise error
 
     def parse(self):
         """ Starts analyzing the program, checks if the program is empty """
@@ -51,11 +56,21 @@ class Parser:
         # after which only operator separators can be used
 
         if self.tokens.is_empty():
+            if self.note_ongoing:
+                raise UnexpectedTokenError(Token(_value="EOF",
+                                                 _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
+                                                 _line=-1,
+                                                 _char=-1),
+                                           "note end")
             raise EndOfProgramError
 
         elif self.operators_average < 1:
             raise EmptyProgramError
 
+        elif self.block > 0:
+            raise UnexpectedTokenError(self.tokens.get(), "Block end")
+
+        # program is not empty but stopped, so next token is 'end'
         self.tokens.get()
         while not self.tokens.is_empty():
             next_token = self.tokens.get()
@@ -73,6 +88,7 @@ class Parser:
             if self.tokens.front().token_type == TokenType.DIM:
                 self.operators_average += 1
                 self.check_description()
+                self.last = TokenType.DIM
 
             elif (self.tokens.front().token_type in [TokenType.BLOCK_START, TokenType.IDENTIFIER,
                                                      TokenType.IF, TokenType.FOR, TokenType.WHILE,
@@ -142,8 +158,13 @@ class Parser:
         for identifier in identifier_list:
             for existing_id in self.identifier_table:
                 if identifier.value == existing_id.name:
-                    self.identifier_table.remove(existing_id)
-                    break
+                    raise ReDescriptionError(self.tokens.get() if not self.tokens.is_empty()
+                                             else Token(_value="",
+                                                        _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
+                                                        _line=-1,
+                                                        _char=-1),
+                                             existing_id)
+
             self.identifier_table.append(Identifier(_name=identifier.value, _type=identifiers_type))
 
         if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER:
@@ -151,25 +172,35 @@ class Parser:
 
     def check_operator(self):
         """ Checks whether the operator matches the grammar of the language """
+        while not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.OPERATOR_DELIMITER:
+            self.tokens.get()
+
         if not self.tokens.is_empty():
             token = self.tokens.front()
-            self.note_ongoing = False
             if token.token_type == TokenType.BLOCK_START:
+                self.last = TokenType.BLOCK_START
                 self.check_compound()
 
             elif token.token_type == TokenType.IDENTIFIER:
                 self.check_assignment()
 
             elif token.token_type == TokenType.IF:
+                self.last = TokenType.IF
                 self.check_conditional()
 
             elif token.token_type == TokenType.FOR:
+                self.last = TokenType.FOR
                 self.check_fixed_cycle()
 
             elif token.token_type == TokenType.WHILE:
+                self.last = TokenType.WHILE
                 self.check_conditional_cycle()
 
-            elif token.token_type == TokenType.READ or token == TokenType.WRITE:
+            elif token.token_type == TokenType.READ or token.token_type == TokenType.WRITE:
+                self.last = TokenType.READ
+                if token.token_type == TokenType.WRITE:
+                    self.last = TokenType.WRITE
+
                 self.check_read_write()
 
             elif self.tokens.front().token_type == TokenType.NOTE_START:
@@ -180,45 +211,32 @@ class Parser:
                     if next_token.token_type != TokenType.NOTE_END:
                         raise UnexpectedTokenError(next_token, "End of note")
 
-            if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER:
-                if (self.tokens.front().token_type != TokenType.BLOCK_END
-                        and not self.note_ongoing
-                        and self.tokens.front().token_type != TokenType.NOTE_START):
-                    raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
+                    self.note_ongoing = False
+
+            else:
+                if self.tokens.front().token_type != TokenType.BLOCK_END:
+                    raise UnexpectedTokenError(self.tokens.get(), "End of block")
 
     def check_compound(self):
         """ Checks whether the compound operator matches the grammar of the language """
         self.tokens.get()
-        while not self.tokens.is_empty() and self.tokens.front().token_type in [TokenType.IDENTIFIER, TokenType.IF,
-                                                                                TokenType.FOR, TokenType.WHILE,
-                                                                                TokenType.READ, TokenType.WRITE,
-                                                                                TokenType.NOTE_START,
-                                                                                TokenType.OPERATOR_DELIMITER]:
-            if self.tokens.front() == TokenType.NOTE_START:
-                self.note_ongoing = True
-                self.tokens.get()
-                if not self.tokens.is_empty():
-                    next_token = self.tokens.get()
-                    if next_token.token_type != TokenType.NOTE_END:
-                        raise UnexpectedTokenError(next_token, "End of note")
+        self.block += 1
 
-            self.note_ongoing = False
-
-            while not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.OPERATOR_DELIMITER:
-                self.tokens.get()
-
+        while not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.BLOCK_END:
             self.check_operator()
 
-        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.BLOCK_END:
-            raise UnexpectedTokenError(self.tokens.get(), "Block end")
+        if not self.tokens.is_empty():
+            self.tokens.get()
+            self.block -= 1
 
-        self.tokens.get()
+        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER:
+            raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_assignment(self):
         """ Checks whether the assignment operator matches the grammar of the language """
         identifier = self.tokens.get()
         if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.AS:
-            raise UnexpectedTokenError(self.tokens.get(), "assignment operator")
+            raise UnexpectedTokenError(self.tokens.get(), "Assignment operator")
 
         self.tokens.get()
         flag = False
@@ -236,8 +254,13 @@ class Parser:
                 if identifier.value == existing_id.name:
                     existing_id.is_assigned = True
                     if existing_id.type != new_value.type:
+                        # integer can be written to real variable
                         if existing_id.type != IdentifierType.REAL or new_value.type != IdentifierType.INTEGER:
                             raise AssignmentTypeError(identifier, new_value.type, existing_id.type)
+
+        if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
+                and self.last != TokenType.FOR and self.block == 0):
+            raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_conditional(self):
         """ Checks whether the conditional operator matches the grammar of the language """
@@ -260,6 +283,10 @@ class Parser:
         if not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.ELSE:
             self.tokens.get()
             self.check_operator()
+
+        if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
+                and self.block == 0):
+            raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_fixed_cycle(self):
         """ Checks whether the fixed cycle operator matches the grammar of the language """
@@ -286,6 +313,9 @@ class Parser:
             self.tokens.get()
             self.check_operator()
 
+        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER:
+            raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
+
     def check_conditional_cycle(self):
         """ Checks whether the conditional cycle operator matches the grammar of the language """
         self.tokens.get()
@@ -302,6 +332,9 @@ class Parser:
 
             self.tokens.get()
             self.check_operator()
+
+        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER:
+            raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_read_write(self):
         """ Checks whether the read or write operator matches the grammar of the language """
@@ -346,12 +379,15 @@ class Parser:
                                                   _char=self.auxiliary_token.char + len(self.auxiliary_token.value)),
                                        "Identifier")
 
+        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER and self.block == 0:
+            raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
+
     def check_expression(self) -> Identifier:
         """ Checks if tokens represents an expression, returns expression result (value and type) """
         identifier1 = self.check_operand()
         self.waiting_for = identifier1.type
-        # Actually type of second identifier could be wider (e.g. int + real)
 
+        # Actually type of second identifier could be wider (e.g. int + real)
         if (self.tokens.is_empty() or self.tokens.front().token_type not in [TokenType.NOT_EQUALS,
                                                                              TokenType.EQUALS,
                                                                              TokenType.LESS,
@@ -416,16 +452,16 @@ class Parser:
 
     def check_multiplier(self) -> Identifier:
         """ Checks if tokens represents a multiplier """
-        if not self.tokens.is_empty() and self.tokens.front() == TokenType.ARGUMENT_START:
+        if not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.ARGUMENT_START:
             self.tokens.get()
             multiplier = self.check_expression()
-            if not self.tokens.is_empty() and self.tokens.front() != TokenType.ARGUMENT_END:
+            if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.ARGUMENT_END:
                 raise UnexpectedTokenError(self.tokens.get(), "closing bracket")
 
             self.tokens.get()
             return multiplier
 
-        elif not self.tokens.is_empty() and self.tokens.front() == TokenType.NOT:
+        elif not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.NOT:
             self.tokens.get()
 
             if not self.tokens.is_empty():

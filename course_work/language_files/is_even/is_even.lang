@@ -1,6 +1,7 @@
-dim auxiliary, sum, i %
+dim sum, i %
+dim auxiliary !
 for i as 0d to i < 10d do [
-    auxiliary = i / 2 : sum as sum + i
+    auxiliary as i / 2 : sum as sum + i
     if auxiliary * 2 = i then
         write(i)
     i as i + 1d
