@@ -15,7 +15,7 @@ from course_work.tools.exceptions import (ModelLanguageError,
                                           ReferencedBeforeAssignmentError)
 
 
-# TODO почему то вызывается проверка выражения перед <=
+#  TODO начинает искать выражение перед "<=" в обоих циклах
 
 class Parser:
     """ Implementation of the syntactic and semantic analyzer """
@@ -274,7 +274,7 @@ class Parser:
         self.tokens.get()
         if not self.tokens.is_empty():
             line = self.tokens.front().line
-            char = self.tokens.get().char
+            char = self.tokens.front().char
             expression = self.check_expression()
 
             if expression.type != IdentifierType.BOOLEAN:
@@ -289,10 +289,9 @@ class Parser:
     def check_conditional_cycle(self):
         """ Checks whether the conditional cycle operator matches the grammar of the language """
         self.tokens.get()
-
         if not self.tokens.is_empty():
             line = self.tokens.front().line
-            char = self.tokens.get().char
+            char = self.tokens.front().char
             expression = self.check_expression()
 
             if expression.type != IdentifierType.BOOLEAN:
@@ -420,7 +419,7 @@ class Parser:
         if not self.tokens.is_empty() and self.tokens.front() == TokenType.ARGUMENT_START:
             self.tokens.get()
             multiplier = self.check_expression()
-            if not self.tokens.is_empty() and not self.tokens.front() == TokenType.ARGUMENT_END:
+            if not self.tokens.is_empty() and self.tokens.front() != TokenType.ARGUMENT_END:
                 raise UnexpectedTokenError(self.tokens.get(), "closing bracket")
 
             self.tokens.get()

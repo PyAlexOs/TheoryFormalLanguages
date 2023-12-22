@@ -2,6 +2,8 @@ dim b, i % : dim a !
 dim bool $
 a as b + a
 
+while i <= 10d do [a as a / a : write(a)]
+
 for i as 1d to i <= 10d do [
     a as i / 2d : b as b + i
     if a * 2d = i then
