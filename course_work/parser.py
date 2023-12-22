@@ -214,7 +214,7 @@ class Parser:
                     self.note_ongoing = False
 
             else:
-                if self.tokens.front().token_type != TokenType.BLOCK_END:
+                if self.tokens.front().token_type != TokenType.BLOCK_END and self.last != TokenType.BLOCK_START:
                     raise UnexpectedTokenError(self.tokens.get(), "End of block")
 
     def check_compound(self):
@@ -229,7 +229,8 @@ class Parser:
             self.tokens.get()
             self.block -= 1
 
-        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER:
+        if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
+                and self.last != TokenType.IF and self.tokens.front().token_type != TokenType.ELSE):
             raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_assignment(self):
@@ -277,7 +278,9 @@ class Parser:
         self.tokens.get()
         self.check_operator()
 
+        count = 0
         while not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.OPERATOR_DELIMITER:
+            count += 1
             self.tokens.get()
 
         if not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.ELSE:
@@ -285,7 +288,7 @@ class Parser:
             self.check_operator()
 
         if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
-                and self.block == 0):
+                and self.block == 0 and  count == 0):
             raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_fixed_cycle(self):

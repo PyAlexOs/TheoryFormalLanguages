@@ -1,0 +1,36 @@
+dim a, b, c %
+read(a, b, c)
+
+dim first, second, third $
+first as a <= b : second as b <= c :third as a <= c
+
+if first then [
+    if second then [
+        if third then [
+            write(a, b, c)]
+        else [
+            write(a, c, b)]
+            ]
+        else [
+        if third then [
+            write(b, a, c)
+        ] else [
+            write(b, c, a)
+        ]
+    ]
+] else [
+    if second then [
+        if third then [
+            write(c, b, a)
+        ] else [
+            write(c, a, b)]
+            ]
+        else [
+            if third then [
+                write(a)]
+            else [
+                write(b)]
+                ]
+            ]
+
+end

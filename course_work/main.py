@@ -11,10 +11,10 @@ import sys
 def main():
     """
         python ./course_work/main.py course_work/language_files/is_even/is_even.lang
+        python ./course_work/main.py course_work/language_files/all_tokens/all_tokens.lang
+        python ./course_work/main.py course_work/language_files/conditionals/conditionals.lang
         python ./course_work/main.py course_work/language_files//.lang
         python ./course_work/main.py course_work/language_files//.lang
-        python ./course_work/main.py course_work/language_files//.lang
-        python ./course_work/main.py course_work/language_files/test.lang
     """
     try:
         filename = sys.argv[1]

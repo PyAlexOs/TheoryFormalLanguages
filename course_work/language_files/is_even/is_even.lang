@@ -5,9 +5,10 @@ for i as 1 to i <= 10 do [
     auxiliary as i / 2 : sum as sum + i
     if auxiliary * 2 = i then
         write(i)
+    else
+        write(auxiliary)
 
-    i as i + 1d
-]
+    i as i + 1d]
 
 write(sum)
 end

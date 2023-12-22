@@ -1,0 +1,24 @@
+dim a, b, c %
+dim d !
+dim bool $
+
+a as 100
+b as 101010101110100b
+c as 1ABCDEFabcdefH
+d as 123.456
+bool as true
+
+dim i !
+while bool do [
+    i as i + 1
+    if not (a * b + c <= a * a) and (b + b <> c) or (c > a) then bool as false
+]
+
+dim out !
+out as i + 1
+if not bool then write(out)
+
+dim aux %
+for a as 0 to a <= 1234567o do
+[ a as a + 1: read(b, c) :aux as a * (b * c) :write(aux) ]
+end
