@@ -12,9 +12,10 @@ from course_work.tools.exceptions import (ModelLanguageError,
                                           OperationError,
                                           PredicateTypeError,
                                           AssignmentTypeError,
-                                          DeclarationError,
                                           ReferencedBeforeAssignmentError)
 
+
+# TODO почему то вызывается проверка выражения перед <=
 
 class Parser:
     """ Implementation of the syntactic and semantic analyzer """
@@ -227,7 +228,7 @@ class Parser:
                 self.waiting_for = existing_id.type
 
         if not flag:
-            raise DeclarationError(identifier)
+            raise ReferencedBeforeAssignmentError(identifier)
 
         new_value = self.check_expression()
         if new_value:
@@ -349,6 +350,9 @@ class Parser:
     def check_expression(self) -> Identifier:
         """ Checks if tokens represents an expression, returns expression result (value and type) """
         identifier1 = self.check_operand()
+        self.waiting_for = identifier1.type
+        # Actually type of second identifier could be wider (e.g. int + real)
+
         if (self.tokens.is_empty() or self.tokens.front().token_type not in [TokenType.NOT_EQUALS,
                                                                              TokenType.EQUALS,
                                                                              TokenType.LESS,
@@ -358,7 +362,6 @@ class Parser:
             return identifier1
 
         operator = self.tokens.get()
-        print(str(operator))
         identifier2 = self.check_operand()
         try:
             result = Identifier(_name="",
@@ -367,7 +370,7 @@ class Parser:
                                         [identifier1.type.name, identifier2.type.name])])
 
         except ValueError:
-            raise OperationError(identifier1.type, identifier2.type, operator.value)
+            raise OperationError(identifier1.type, identifier2.type, operator.value, operator.line, operator.char)
 
         return result
 
@@ -387,7 +390,7 @@ class Parser:
                                     OPERATIONS[operator.token_type][0].index([summand1.type.name, summand2.type.name])])
 
         except ValueError:
-            raise OperationError(summand1.type, summand2.type, operator.value)
+            raise OperationError(summand1.type, summand2.type, operator.value, operator.line, operator.char)
 
         return result
 
@@ -408,7 +411,7 @@ class Parser:
                                         [multiplier1.type.name, multiplier2.type.name])])
 
         except ValueError:
-            raise OperationError(multiplier1.type, multiplier2.type, operator.value)
+            raise OperationError(multiplier1.type, multiplier2.type, operator.value, operator.line, operator.char)
 
         return result
 

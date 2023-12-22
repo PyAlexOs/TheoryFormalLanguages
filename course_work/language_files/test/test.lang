@@ -1,14 +1,6 @@
 dim b, i % : dim a !
 dim bool $
-
-i as a + bool
-i as 22acH + 22d
-a as i / 2d : b as b + i
-dim pop %
-if bool then [a as 9d {lf,,f,ldldl} : pop as b + b] : else [
-    a as a + 1d     ]
-pop as 1000AAAh
-
+a as b + a
 
 for i as 1d to i <= 10d do [
     a as i / 2d : b as b + i
@@ -20,6 +12,17 @@ for i as 1d to i <= 10d do [
     и тут тоже
     }
 ]
+
+if b <= i then b as i
+else [a as i]
+
+i as 22acH + 22d
+a as i / 2d : b as b + i
+dim pop %
+if bool then [a as 9d {lf,,f,ldldl} : pop as b + b] : else [
+    a as a + 1d     ]
+pop as 1000AAAh
+
 write(b)
 end
 gjgjgjgj

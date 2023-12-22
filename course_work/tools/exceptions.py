@@ -56,16 +56,19 @@ class UnexpectedCharacterSequenceError(ModelLanguageError):
                 str(self.token.char) + " " + self.token.value)
 
 
-class OperationError(ModelLanguageError): # not used yet
-    def __init__(self, type1: IdentifierType, type2: IdentifierType, operator: str):
+class OperationError(ModelLanguageError):
+    def __init__(self, type1: IdentifierType, type2: IdentifierType, operator: str, _line: int, _char: int):
         self.type1 = type1
         self.type2 = type2
         self.operator = operator
+        self.line = _line
+        self.char = _char
         super().__init__()
 
     def __str__(self):
-        return ("Incorrect operator " + self.operator + " for operands with " +
-                self.type1.name.lower() + " and " + self.type2.name.lower() + " types")
+        return ("Incorrect operator " + self.operator + " for " +
+                self.type1.name.lower() + " and " + self.type2.name.lower() +
+                " at " + str(self.line) + ":" + str(self.char))
 
 
 class PredicateTypeError(ModelLanguageError):
@@ -101,16 +104,6 @@ class AssignmentTypeError(ModelLanguageError):
         return ("Incorrect assignment type at " + str(self.token.line) + ":" +
                 str(self.token.char) + ". Trying to assign " + self._type.name.lower() +
                 " variable '" + self.token.value + "' with " + self.value + " value")
-
-
-class DeclarationError(ModelLanguageError):
-    def __init__(self, _token: Token):
-        self.token = _token
-        super().__init__()
-
-    def __str__(self):
-        return ("Variable '" + self.token.value + "' is not declared yet at " +
-                str(self.token.line) + ":" + str(self.token.char))
 
 
 class ReferencedBeforeAssignmentError(ModelLanguageError):
