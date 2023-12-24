@@ -206,6 +206,10 @@ def get_tokens(filename: str, encoding: str = "utf-8") -> TokenQueue:
                         buffer = current_symbol
                         current_state = State.Start
                     else:
+                        if current_symbol == "":
+                            tokens.put(Token(_value=buffer, _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
+                                             _line=current_line, _char=current_char - len(buffer)))
+                            current_state = State.EOF
                         buffer += current_symbol
 
                     continue
