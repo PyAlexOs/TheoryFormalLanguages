@@ -1,0 +1,3 @@
+dim boolVariable $
+boolVariable as 1
+end

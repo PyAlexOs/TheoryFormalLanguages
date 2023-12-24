@@ -1,0 +1,5 @@
+dim a, b, i %
+read(a, b)
+
+for i as 0
+end

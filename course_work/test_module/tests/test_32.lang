@@ -1,0 +1,8 @@
+dim a, b %
+read(a, b)
+
+dim bool $
+bool as true
+
+while bool
+end

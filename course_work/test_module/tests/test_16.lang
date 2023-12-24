@@ -1,0 +1,5 @@
+dim a, b %
+read(a, b)
+dim c !
+c as a + b
+end

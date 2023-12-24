@@ -1,0 +1,15 @@
+dim a, b, c, d %
+dim e, f !
+dim bool1, bool2 $
+
+read(a, b, c, e)
+d as 10000000000000000b
+f as 0.0e1000
+bool1 as true : bool2 as false
+
+dim result !
+result as ((a + (b + (c + d))) * e) / a
+
+if (result > a * (a + a * (a + (a + a)))) and ((bool1 and not bool2) and (result <> b * (e * (e + a)))) then
+write(a)
+end

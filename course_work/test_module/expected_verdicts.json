@@ -1,0 +1,202 @@
+{
+  "test_1.lang": {
+    "comment": "empty file",
+    "expected_result": "At least one statement was expected, nothing was found before the 'end' statement",
+    "error_raised": true
+  },
+  "test_2.lang": {
+    "comment": "only end statement",
+    "expected_result": "At least one statement was expected, nothing was found before the 'end' statement",
+    "error_raised": true
+  },
+  "test_3.lang": {
+    "comment": "only comment before end statement",
+    "expected_result": "At least one statement was expected, nothing was found before the 'end' statement",
+    "error_raised": true
+  },
+  "test_4.lang": {
+    "comment": "end statement missed",
+    "expected_result": "The end statement was expected but was not found",
+    "error_raised": true
+  },
+  "test_5.lang": {
+    "comment": "attempt to initialize an integer variable with a Boolean value",
+    "expected_result": "Incorrect assignment type at 2:0. Trying to assign integer variable 'integerVariable' with boolean value",
+    "error_raised": true
+  },
+  "test_6.lang": {
+    "comment": "attempt to initialize an integer variable with a floating point value",
+    "expected_result": "Incorrect assignment type at 2:0. Trying to assign integer variable 'integerVariable' with real value",
+    "error_raised": true
+  },
+  "test_7.lang": {
+    "comment": "attempt to initialize a real variable with an integer value",
+    "expected_result": "okay",
+    "error_raised": false
+  },
+  "test_8.lang": {
+    "comment": "attempt to initialize a real variable with a Boolean value",
+    "expected_result": "Incorrect assignment type at 2:0. Trying to assign real variable 'realVariable' with boolean value",
+    "error_raised": true
+  },
+  "test_9.lang": {
+    "comment": "attempt to initialize a Boolean variable with an integer value",
+    "expected_result": "Incorrect assignment type at 2:0. Trying to assign boolean variable 'boolVariable' with integer value",
+    "error_raised": true
+  },
+  "test_10.lang": {
+    "comment": "attempt to initialize a Boolean variable with a floating point value",
+    "expected_result": "Incorrect assignment type at 2:0. Trying to assign boolean variable 'boolVariable' with real value",
+    "error_raised": true
+  },
+  "test_11.lang": {
+    "comment": "attempt to initialize (use) variable before declaration",
+    "expected_result": "Variable 'variable' referenced before declaration at 1:1",
+    "error_raised": true
+  },
+  "test_12.lang": {
+    "comment": "attempt to use variable before assignment",
+    "expected_result": "Variable 'integer1' referenced before assignment at 2:12",
+    "error_raised": true
+  },
+  "test_13.lang": {
+    "comment": "type not found in variable declaration",
+    "expected_result": "Unexpected token at 1:25. Identifier or type was expected, operator delimiter was found",
+    "error_raised": true
+  },
+  "test_14.lang": {
+    "comment": "comma not found between identifiers in read (write) operator",
+    "expected_result": "Unexpected token at 2:7. Comma was expected, identifier \"b\" was found",
+    "error_raised": true
+  },
+  "test_15.lang": {
+    "comment": "closing bracket not found after identifiers in read (write) operator",
+    "expected_result": "Unexpected token at 2:9. Identifier or closing bracket was expected, operator delimiter was found",
+    "error_raised": true
+  },
+  "test_16.lang": {
+    "comment": "read two variables, than initialize third variable as the sum of the first two",
+    "expected_result": "okay",
+    "error_raised": false
+  },
+  "test_17.lang": {
+    "comment": "the program ended suddenly after the start of the conditional statement",
+    "expected_result": "Unexpected token at the end of the file. Expression was expected, nothing was was found",
+    "error_raised": true
+  },
+  "test_18.lang": {
+    "comment": "then not found after the start of the conditional statement",
+    "expected_result": "Unexpected token at 4:8. Then was expected, operator delimiter was found",
+    "error_raised": true
+  },
+  "test_19.lang": {
+    "comment": "operator after the conditional statement not found",
+    "expected_result": "Unexpected token at 4:13. Operator for conditional was expected, operator delimiter was found",
+    "error_raised": true
+  },
+  "test_20.lang": {
+    "comment": "attempt to use integer value instead of boolean value as predicate",
+    "expected_result": "Incorrect predicate at 4:0. Expected for boolean, found integer",
+    "error_raised": true
+  },
+  "test_21.lang": {
+    "comment": "common conditional operator",
+    "expected_result": "okay",
+    "error_raised": false
+  },
+  "test_22.lang": {
+    "comment": "operator after the second part of conditional statement (else) not found",
+    "expected_result": "Unexpected token at 6:6. Operator for conditional was expected, operator delimiter was found",
+    "error_raised": true
+  },
+  "test_23.lang": {
+    "comment": "common conditional operator with the correct second part (else)",
+    "expected_result": "okay",
+    "error_raised": false
+  },
+  "test_24.lang": {
+    "comment": "assignment operation after the start of fixed cycle not found",
+    "expected_result": "Unexpected token at 4:3. Identifier was expected, operator delimiter was found",
+    "error_raised": true
+  },
+  "test_25.lang": {
+    "comment": "to after the start of fixed cycle not found",
+    "expected_result": "Unexpected token at 4:10. 'To' was expected, operator delimiter was found",
+    "error_raised": true
+  },
+  "test_26.lang": {
+    "comment": "expression after 'to' in fixed cycle not found",
+    "expected_result": "Unexpected token at 4:13. integer was expected, operator delimiter was found",
+    "error_raised": true
+  },
+  "test_27.lang": {
+    "comment": "attempt to use integer value instead of boolean value as predicate",
+    "expected_result": "Incorrect predicate at 4:14. Expected for boolean, found integer",
+    "error_raised": true
+  },
+  "test_28.lang": {
+    "comment": "'do' after the start of the fixed cycle not found",
+    "expected_result": "Unexpected token at 4:24. 'Do' was expected, operator delimiter was found",
+    "error_raised": true
+  },
+  "test_29.lang": {
+    "comment": "operator after the fixed cycle not found",
+    "expected_result": "Unexpected token at 4:27. Operator for fixed cycle was expected, operator delimiter was found",
+    "error_raised": true
+  },
+  "test_30.lang": {
+    "comment": "fixed cycle with correct assignment, predicate and operators; outputs numbers from 0 to 10AB (hex)",
+    "expected_result": "okay",
+    "error_raised": false
+  },
+  "test_31.lang": {
+    "comment": "expression after the start of the conditional cycle not found",
+    "expected_result": "Unexpected token at 6:5. Expression was expected, operator delimiter was found",
+    "error_raised": true
+  },
+  "test_32.lang": {
+    "comment": "'do' after the start of the conditional cycle not found",
+    "expected_result": "Unexpected token at 7:10. do was expected, operator delimiter was found",
+    "error_raised": true
+  },
+  "test_33.lang": {
+    "comment": "operator after the conditional cycle not found",
+    "expected_result": "Unexpected token at 7:13. Operator for conditional cycle was expected, operator delimiter was found",
+    "error_raised": true
+  },
+  "test_34.lang": {
+    "comment": "attempt to use integer value instead of boolean value as predicate",
+    "expected_result": "Incorrect predicate at 8:6. Expected for boolean, found integer",
+    "error_raised": true
+  },
+  "test_35.lang": {
+    "comment": "conditional cycle with correct predicate and operators; outputs numbers from 0 to 10",
+    "expected_result": "okay",
+    "error_raised": false
+  },
+  "test_36.lang": {
+    "comment": "attempt to multiply boolean and integer value",
+    "expected_result": "Incorrect operator * for boolean and integer at 6:7",
+    "error_raised": true
+  },
+  "test_37.lang": {
+    "comment": "attempt to find the complement for a floating point value",
+    "expected_result": "Unexpected token at 6:9. boolean variable was expected, identifier \"a\" was found",
+    "error_raised": true
+  },
+  "test_38.lang": {
+    "comment": "assigning boolean variable as complement of other boolean variable",
+    "expected_result": "okay",
+    "error_raised": false
+  },
+  "test_39.lang": {
+    "comment": "program with one-line and multi-line comments in different places",
+    "expected_result": "okay",
+    "error_raised": false
+  },
+  "test_40.lang": {
+    "comment": "complicating expressions test",
+    "expected_result": "okay",
+    "error_raised": false
+  }
+}

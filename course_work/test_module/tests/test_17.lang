@@ -1,0 +1,4 @@
+dim a, b %
+read(a, b)
+
+if

@@ -1,0 +1,13 @@
+dim a, b, i %
+read(a, b)
+i as 1
+
+dim bool $
+bool as true
+
+while a do [
+    write(i)
+    i as i + 1
+    if i > 10 then bool as false
+]
+end

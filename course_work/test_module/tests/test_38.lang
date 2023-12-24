@@ -1,0 +1,4 @@
+dim c $
+c as true
+c as not c
+end

@@ -1,0 +1,7 @@
+dim a, b %
+read(a, b)
+
+if a then [
+    write(b)
+]
+end

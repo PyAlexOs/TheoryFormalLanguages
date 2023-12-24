@@ -1,0 +1,7 @@
+dim a $
+dim b %
+a as true
+b as 10
+dim c !
+c as a * b
+end

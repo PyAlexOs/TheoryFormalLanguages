@@ -1,0 +1,3 @@
+dim integer1, integer2 %
+integer2 as integer1
+end

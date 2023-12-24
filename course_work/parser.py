@@ -1,19 +1,19 @@
-from tools.tokenQueue import TokenQueue
-from tools.structures import (TokenType,
-                              Token,
-                              IdentifierType,
-                              Identifier,
-                              OPERATIONS)
-from tools.exceptions import (ModelLanguageError,
-                              EmptyProgramError,
-                              EndOfProgramError,
-                              UnexpectedTokenError,
-                              UnexpectedCharacterSequenceError,
-                              OperationError,
-                              PredicateTypeError,
-                              AssignmentTypeError,
-                              ReferencedBeforeAssignmentError,
-                              ReDescriptionError)
+from course_work.tools.tokenQueue import TokenQueue
+from course_work.tools.structures import (TokenType,
+                                          Token,
+                                          IdentifierType,
+                                          Identifier,
+                                          OPERATIONS)
+from course_work.tools.exceptions import (ModelLanguageError,
+                                          EmptyProgramError,
+                                          EndOfProgramError,
+                                          UnexpectedTokenError,
+                                          UnexpectedCharacterSequenceError,
+                                          OperationError,
+                                          PredicateTypeError,
+                                          AssignmentTypeError,
+                                          ReferencedBeforeAssignmentError,
+                                          ReDescriptionError)
 
 
 class Parser:
@@ -35,6 +35,7 @@ class Parser:
         self.block = 0
         self.last = TokenType.UNEXPECTED_CHARACTER_SEQUENCE
         self.note_ongoing = False
+        self.waiting_for = None
 
     def __call__(self):
         try:
@@ -207,7 +208,8 @@ class Parser:
             else:
                 if (self.tokens.front().token_type != TokenType.BLOCK_END and self.last != TokenType.BLOCK_START
                         and self.tokens.front().token_type != TokenType.NOTE_START):
-                    if self.last == TokenType.IF or self.last == TokenType.FOR or self.last == TokenType.WHILE:
+                    if (self.last == TokenType.IF or self.last == TokenType.FOR or self.last == TokenType.WHILE or
+                            self.last == TokenType.ELSE):
                         return False
 
                     raise UnexpectedTokenError(self.tokens.front(), "End of block")
@@ -255,7 +257,7 @@ class Parser:
                 self.waiting_for = existing_id.type
 
         if not flag:
-            raise ReferencedBeforeAssignmentError(identifier, True)
+            raise ReferencedBeforeAssignmentError(identifier, False)
 
         new_value = self.check_expression()
         if new_value:
@@ -299,6 +301,7 @@ class Parser:
             self.tokens.get()
             if not self.tokens.is_empty():
                 auxiliary = self.tokens.front()
+                self.last = TokenType.ELSE
                 if not self.check_operator():
                     raise UnexpectedTokenError(auxiliary, "Operator for conditional")
 
@@ -310,13 +313,17 @@ class Parser:
         """ Checks whether the fixed cycle operator matches the grammar of the language """
         self.tokens.get()
         if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.IDENTIFIER:
-            raise UnexpectedTokenError(self.tokens.get(), "identifier")
+            raise UnexpectedTokenError(self.tokens.get(), "Identifier")
 
-        self.check_assignment()
+        if not self.tokens.is_empty():
+            self.check_assignment()
+
         if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.TO:
-            raise UnexpectedTokenError(self.tokens.get(), "to")
+            raise UnexpectedTokenError(self.tokens.get(), "'To'")
 
-        self.tokens.get()
+        if not self.tokens.is_empty():
+            self.tokens.get()
+
         if not self.tokens.is_empty():
             line = self.tokens.front().line
             char = self.tokens.front().char
@@ -326,7 +333,7 @@ class Parser:
                 raise PredicateTypeError(expression.type, line, char)
 
             if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.DO:
-                raise UnexpectedTokenError(self.tokens.get(), "do")
+                raise UnexpectedTokenError(self.tokens.get(), "'Do'")
 
             self.tokens.get()
             if not self.tokens.is_empty():
@@ -522,7 +529,7 @@ class Parser:
                 multiplier = self.check_multiplier()
 
                 if multiplier.type != IdentifierType.BOOLEAN:
-                    raise UnexpectedTokenError(token, "boolean-type variable")
+                    raise UnexpectedTokenError(token, "boolean variable")
 
                 return multiplier
 
@@ -539,10 +546,14 @@ class Parser:
                 if existing_id.name == token.value:
                     flag = True
                     _type = existing_id.type
+
+                    if not existing_id.is_assigned:
+                        raise ReferencedBeforeAssignmentError(token, True)
+
                     break
 
             if not flag:
-                raise ReferencedBeforeAssignmentError(token, True)
+                raise ReferencedBeforeAssignmentError(token, False)
 
             return Identifier(_name="", _type=_type)
 
@@ -562,4 +573,4 @@ class Parser:
                                                   _token_type=TokenType.UNEXPECTED_CHARACTER_SEQUENCE,
                                                   _line=-1,
                                                   _char=-1),
-                                       self.waiting_for.name.lower())
+                                       self.waiting_for.name.lower() if self.waiting_for else "Expression")

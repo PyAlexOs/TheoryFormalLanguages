@@ -1,9 +1,9 @@
-from tools.file_methods import (save_tokens,
-                                load_tokens,
-                                save_tokens_json,
-                                load_tokens_json)
-from tokenizer import get_tokens
-from parser import Parser
+from course_work.tools.file_methods import (save_tokens,
+                                            load_tokens,
+                                            save_tokens_json,
+                                            load_tokens_json)
+from course_work.tokenizer import get_tokens
+from course_work.parser import Parser
 import os
 import sys
 
@@ -16,7 +16,7 @@ def main():
         python ./course_work/main.py course_work/language_files/factorial/factorial.lang
         python ./course_work/main.py course_work/language_files/search_for_fraction/search_for_fraction.lang
 
-        for on-go tests:
+        for on-go test_module:
         python ./course_work/main.py course_work/language_files/temp/temp.lang
     """
     try:

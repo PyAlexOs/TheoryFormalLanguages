@@ -1,7 +1,7 @@
-from .structures import (Token,
-                         TokenType,
-                         Identifier,
-                         IdentifierType)
+from course_work.tools.structures import (Token,
+                                          TokenType,
+                                          Identifier,
+                                          IdentifierType)
 
 
 class ModelLanguageError(BaseException):
@@ -24,7 +24,7 @@ class EndOfProgramError(ModelLanguageError):
 
     def __str__(self):
         if not self.token:
-            return "The 'end' token was expected but was not found"
+            return "The end statement was expected but was not found"
 
         return ("Tokens were not expected after the 'end' but were found at " +
                 str(self.token.line) + ":" + str(self.token.char) + " " +
@@ -44,6 +44,10 @@ class UnexpectedTokenError(ModelLanguageError):
         super().__init__()
 
     def __str__(self):
+        if self.token.line == -1 and self.token.char == -1:
+            return ("Unexpected token at the end of the file. " + self.expected + " was expected, " +
+                    self.token.value + " was found")
+
         return ("Unexpected token at " + str(self.token.line) + ":" +
                 str(self.token.char) + ". " + self.expected + " was expected, " +
                 self.token.value + " was found")

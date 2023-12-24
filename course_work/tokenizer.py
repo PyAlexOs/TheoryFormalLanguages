@@ -1,14 +1,14 @@
-from tools.structures import (State,
-                              Token,
-                              TokenType,
-                              DELIMITERS,
-                              LETTERS,
-                              DIGITS,
-                              EXTENDED_DIGITS,
-                              WHITESPACES,
-                              TYPES,
-                              KEYWORDS)
-from tools.tokenQueue import TokenQueue
+from course_work.tools.structures import (State,
+                                          Token,
+                                          TokenType,
+                                          DELIMITERS,
+                                          LETTERS,
+                                          DIGITS,
+                                          EXTENDED_DIGITS,
+                                          WHITESPACES,
+                                          TYPES,
+                                          KEYWORDS)
+from course_work.tools.tokenQueue import TokenQueue
 import re
 
 
