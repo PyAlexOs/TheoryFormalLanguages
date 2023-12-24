@@ -1,0 +1,272 @@
+{
+  "0": {
+    "value": "dim",
+    "type": 2,
+    "line": 1,
+    "char": 1
+  },
+  "1": {
+    "value": "factorial",
+    "type": 24,
+    "line": 1,
+    "char": 5
+  },
+  "2": {
+    "value": ",",
+    "type": 35,
+    "line": 1,
+    "char": 14
+  },
+  "3": {
+    "value": "number",
+    "type": 24,
+    "line": 1,
+    "char": 16
+  },
+  "4": {
+    "value": "%",
+    "type": 1,
+    "line": 1,
+    "char": 22
+  },
+  "5": {
+    "value": ":",
+    "type": 36,
+    "line": 1,
+    "char": 24
+  },
+  "6": {
+    "value": "factorial",
+    "type": 24,
+    "line": 2,
+    "char": 0
+  },
+  "7": {
+    "value": "as",
+    "type": 3,
+    "line": 2,
+    "char": 10
+  },
+  "8": {
+    "value": "1",
+    "type": 20,
+    "line": 2,
+    "char": 13
+  },
+  "9": {
+    "value": ":",
+    "type": 36,
+    "line": 2,
+    "char": 14
+  },
+  "10": {
+    "value": "read",
+    "type": 11,
+    "line": 3,
+    "char": 0
+  },
+  "11": {
+    "value": "(",
+    "type": 33,
+    "line": 3,
+    "char": 4
+  },
+  "12": {
+    "value": "number",
+    "type": 24,
+    "line": 3,
+    "char": 5
+  },
+  "13": {
+    "value": ")",
+    "type": 34,
+    "line": 3,
+    "char": 11
+  },
+  "14": {
+    "value": ":",
+    "type": 36,
+    "line": 3,
+    "char": 12
+  },
+  "15": {
+    "value": ":",
+    "type": 36,
+    "line": 4,
+    "char": 0
+  },
+  "16": {
+    "value": "while",
+    "type": 10,
+    "line": 5,
+    "char": 0
+  },
+  "17": {
+    "value": "number",
+    "type": 24,
+    "line": 5,
+    "char": 6
+  },
+  "18": {
+    "value": ">",
+    "type": 29,
+    "line": 5,
+    "char": 13
+  },
+  "19": {
+    "value": "1",
+    "type": 20,
+    "line": 5,
+    "char": 15
+  },
+  "20": {
+    "value": "do",
+    "type": 9,
+    "line": 5,
+    "char": 17
+  },
+  "21": {
+    "value": "[",
+    "type": 31,
+    "line": 5,
+    "char": 20
+  },
+  "22": {
+    "value": ":",
+    "type": 36,
+    "line": 5,
+    "char": 21
+  },
+  "23": {
+    "value": "factorial",
+    "type": 24,
+    "line": 6,
+    "char": 4
+  },
+  "24": {
+    "value": "as",
+    "type": 3,
+    "line": 6,
+    "char": 14
+  },
+  "25": {
+    "value": "factorial",
+    "type": 24,
+    "line": 6,
+    "char": 17
+  },
+  "26": {
+    "value": "*",
+    "type": 39,
+    "line": 6,
+    "char": 27
+  },
+  "27": {
+    "value": "number",
+    "type": 24,
+    "line": 6,
+    "char": 29
+  },
+  "28": {
+    "value": ":",
+    "type": 36,
+    "line": 6,
+    "char": 35
+  },
+  "29": {
+    "value": "number",
+    "type": 24,
+    "line": 7,
+    "char": 4
+  },
+  "30": {
+    "value": "as",
+    "type": 3,
+    "line": 7,
+    "char": 11
+  },
+  "31": {
+    "value": "number",
+    "type": 24,
+    "line": 7,
+    "char": 14
+  },
+  "32": {
+    "value": "-",
+    "type": 38,
+    "line": 7,
+    "char": 21
+  },
+  "33": {
+    "value": "1",
+    "type": 20,
+    "line": 7,
+    "char": 23
+  },
+  "34": {
+    "value": ":",
+    "type": 36,
+    "line": 7,
+    "char": 24
+  },
+  "35": {
+    "value": "]",
+    "type": 32,
+    "line": 8,
+    "char": 0
+  },
+  "36": {
+    "value": ":",
+    "type": 36,
+    "line": 8,
+    "char": 1
+  },
+  "37": {
+    "value": ":",
+    "type": 36,
+    "line": 9,
+    "char": 0
+  },
+  "38": {
+    "value": "write",
+    "type": 12,
+    "line": 10,
+    "char": 0
+  },
+  "39": {
+    "value": "(",
+    "type": 33,
+    "line": 10,
+    "char": 5
+  },
+  "40": {
+    "value": "factorial",
+    "type": 24,
+    "line": 10,
+    "char": 6
+  },
+  "41": {
+    "value": ")",
+    "type": 34,
+    "line": 10,
+    "char": 15
+  },
+  "42": {
+    "value": ":",
+    "type": 36,
+    "line": 10,
+    "char": 16
+  },
+  "43": {
+    "value": "end",
+    "type": 1,
+    "line": 11,
+    "char": 0
+  },
+  "44": {
+    "value": ":",
+    "type": 36,
+    "line": 11,
+    "char": 3
+  }
+}

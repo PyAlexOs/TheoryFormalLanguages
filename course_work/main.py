@@ -13,8 +13,11 @@ def main():
         python ./course_work/main.py course_work/language_files/is_even/is_even.lang
         python ./course_work/main.py course_work/language_files/all_tokens/all_tokens.lang
         python ./course_work/main.py course_work/language_files/conditionals/conditionals.lang
-        python ./course_work/main.py course_work/language_files//.lang
-        python ./course_work/main.py course_work/language_files//.lang
+        python ./course_work/main.py course_work/language_files/factorial/factorial.lang
+        python ./course_work/main.py course_work/language_files/search_for_fraction/search_for_fraction.lang
+
+        for on-go tests:
+        python ./course_work/main.py course_work/language_files/temp/temp.lang
     """
     try:
         filename = sys.argv[1]

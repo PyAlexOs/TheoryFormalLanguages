@@ -1,12 +1,15 @@
-dim sum, i %
-dim auxiliary !
+dim sum, i, auxiliary %
+dim printFalse !
+printFalse as 0.0E1000 {для вывода неверного результата}
 
 for i as 1 to i <= 10 do [
-    auxiliary as i / 2 : sum as sum + i
-    if auxiliary * 2 = i then
-        write(i)
-    else
-        write(auxiliary)
+    sum as sum + i
+    while auxiliary > 0 do [
+        auxiliary as auxiliary - 2
+    ]
+
+    if auxiliary = 0 then write(auxiliary)
+    else write(printFalse)
 
     i as i + 1d]
 

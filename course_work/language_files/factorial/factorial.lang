@@ -1,0 +1,11 @@
+dim factorial, number %
+factorial as 1
+read(number)
+
+while number > 1 do [
+    factorial as factorial * number
+    number as number - 1
+]
+
+write(factorial)
+end

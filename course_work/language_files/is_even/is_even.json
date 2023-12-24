@@ -1,1 +1,500 @@
-{"0": {"value": "dim", "type": 2, "line": 1, "char": 1}, "1": {"value": "sum", "type": 24, "line": 1, "char": 5}, "2": {"value": ",", "type": 35, "line": 1, "char": 8}, "3": {"value": "i", "type": 24, "line": 1, "char": 10}, "4": {"value": "%", "type": 1, "line": 1, "char": 11}, "5": {"value": ":", "type": 36, "line": 1, "char": 13}, "6": {"value": "dim", "type": 2, "line": 2, "char": 0}, "7": {"value": "auxiliary", "type": 24, "line": 2, "char": 4}, "8": {"value": "!", "type": 2, "line": 2, "char": 13}, "9": {"value": ":", "type": 36, "line": 2, "char": 15}, "10": {"value": ":", "type": 36, "line": 3, "char": 0}, "11": {"value": "for", "type": 7, "line": 4, "char": 0}, "12": {"value": "i", "type": 24, "line": 4, "char": 4}, "13": {"value": "as", "type": 3, "line": 4, "char": 6}, "14": {"value": "1", "type": 20, "line": 4, "char": 9}, "15": {"value": "to", "type": 8, "line": 4, "char": 11}, "16": {"value": "i", "type": 24, "line": 4, "char": 14}, "17": {"value": "<=", "type": 28, "line": 4, "char": 15}, "18": {"value": "10", "type": 20, "line": 4, "char": 19}, "19": {"value": "do", "type": 9, "line": 4, "char": 22}, "20": {"value": "[", "type": 31, "line": 4, "char": 25}, "21": {"value": ":", "type": 36, "line": 4, "char": 26}, "22": {"value": "auxiliary", "type": 24, "line": 5, "char": 4}, "23": {"value": "as", "type": 3, "line": 5, "char": 14}, "24": {"value": "i", "type": 24, "line": 5, "char": 17}, "25": {"value": "/", "type": 40, "line": 5, "char": 19}, "26": {"value": "2", "type": 20, "line": 5, "char": 21}, "27": {"value": ":", "type": 36, "line": 5, "char": 23}, "28": {"value": "sum", "type": 24, "line": 5, "char": 25}, "29": {"value": "as", "type": 3, "line": 5, "char": 29}, "30": {"value": "sum", "type": 24, "line": 5, "char": 32}, "31": {"value": "+", "type": 37, "line": 5, "char": 36}, "32": {"value": "i", "type": 24, "line": 5, "char": 38}, "33": {"value": ":", "type": 36, "line": 5, "char": 39}, "34": {"value": "if", "type": 4, "line": 6, "char": 4}, "35": {"value": "auxiliary", "type": 24, "line": 6, "char": 7}, "36": {"value": "*", "type": 39, "line": 6, "char": 17}, "37": {"value": "2", "type": 20, "line": 6, "char": 19}, "38": {"value": "=", "type": 25, "line": 6, "char": 21}, "39": {"value": "i", "type": 24, "line": 6, "char": 23}, "40": {"value": "then", "type": 5, "line": 6, "char": 25}, "41": {"value": ":", "type": 36, "line": 6, "char": 29}, "42": {"value": "write", "type": 12, "line": 7, "char": 8}, "43": {"value": "(", "type": 33, "line": 7, "char": 13}, "44": {"value": "i", "type": 24, "line": 7, "char": 14}, "45": {"value": ")", "type": 34, "line": 7, "char": 15}, "46": {"value": ":", "type": 36, "line": 7, "char": 16}, "47": {"value": "else", "type": 6, "line": 8, "char": 4}, "48": {"value": ":", "type": 36, "line": 8, "char": 8}, "49": {"value": "write", "type": 12, "line": 9, "char": 8}, "50": {"value": "(", "type": 33, "line": 9, "char": 13}, "51": {"value": "auxiliary", "type": 24, "line": 9, "char": 14}, "52": {"value": ")", "type": 34, "line": 9, "char": 23}, "53": {"value": ":", "type": 36, "line": 9, "char": 24}, "54": {"value": ":", "type": 36, "line": 10, "char": 0}, "55": {"value": "i", "type": 24, "line": 11, "char": 4}, "56": {"value": "as", "type": 3, "line": 11, "char": 6}, "57": {"value": "i", "type": 24, "line": 11, "char": 9}, "58": {"value": "+", "type": 37, "line": 11, "char": 11}, "59": {"value": "1d", "type": 20, "line": 11, "char": 13}, "60": {"value": "]", "type": 32, "line": 11, "char": 15}, "61": {"value": ":", "type": 36, "line": 11, "char": 16}, "62": {"value": ":", "type": 36, "line": 12, "char": 0}, "63": {"value": "write", "type": 12, "line": 13, "char": 0}, "64": {"value": "(", "type": 33, "line": 13, "char": 5}, "65": {"value": "sum", "type": 24, "line": 13, "char": 6}, "66": {"value": ")", "type": 34, "line": 13, "char": 9}, "67": {"value": ":", "type": 36, "line": 13, "char": 10}, "68": {"value": "end", "type": 1, "line": 14, "char": 0}}
+{
+  "0": {
+    "value": "dim",
+    "type": 2,
+    "line": 1,
+    "char": 1
+  },
+  "1": {
+    "value": "sum",
+    "type": 24,
+    "line": 1,
+    "char": 5
+  },
+  "2": {
+    "value": ",",
+    "type": 35,
+    "line": 1,
+    "char": 8
+  },
+  "3": {
+    "value": "i",
+    "type": 24,
+    "line": 1,
+    "char": 10
+  },
+  "4": {
+    "value": ",",
+    "type": 35,
+    "line": 1,
+    "char": 11
+  },
+  "5": {
+    "value": "auxiliary",
+    "type": 24,
+    "line": 1,
+    "char": 13
+  },
+  "6": {
+    "value": "%",
+    "type": 1,
+    "line": 1,
+    "char": 22
+  },
+  "7": {
+    "value": ":",
+    "type": 36,
+    "line": 1,
+    "char": 24
+  },
+  "8": {
+    "value": "dim",
+    "type": 2,
+    "line": 2,
+    "char": 0
+  },
+  "9": {
+    "value": "printFalse",
+    "type": 24,
+    "line": 2,
+    "char": 4
+  },
+  "10": {
+    "value": "!",
+    "type": 2,
+    "line": 2,
+    "char": 14
+  },
+  "11": {
+    "value": ":",
+    "type": 36,
+    "line": 2,
+    "char": 16
+  },
+  "12": {
+    "value": "printFalse",
+    "type": 24,
+    "line": 3,
+    "char": 0
+  },
+  "13": {
+    "value": "as",
+    "type": 3,
+    "line": 3,
+    "char": 11
+  },
+  "14": {
+    "value": "0.0E1000",
+    "type": 22,
+    "line": 3,
+    "char": 14
+  },
+  "15": {
+    "value": "{",
+    "type": 41,
+    "line": 3,
+    "char": 22
+  },
+  "16": {
+    "value": "}",
+    "type": 42,
+    "line": 3,
+    "char": 54
+  },
+  "17": {
+    "value": ":",
+    "type": 36,
+    "line": 3,
+    "char": 56
+  },
+  "18": {
+    "value": ":",
+    "type": 36,
+    "line": 4,
+    "char": 0
+  },
+  "19": {
+    "value": "for",
+    "type": 7,
+    "line": 5,
+    "char": 0
+  },
+  "20": {
+    "value": "i",
+    "type": 24,
+    "line": 5,
+    "char": 4
+  },
+  "21": {
+    "value": "as",
+    "type": 3,
+    "line": 5,
+    "char": 6
+  },
+  "22": {
+    "value": "1",
+    "type": 20,
+    "line": 5,
+    "char": 9
+  },
+  "23": {
+    "value": "to",
+    "type": 8,
+    "line": 5,
+    "char": 11
+  },
+  "24": {
+    "value": "i",
+    "type": 24,
+    "line": 5,
+    "char": 14
+  },
+  "25": {
+    "value": "<=",
+    "type": 28,
+    "line": 5,
+    "char": 15
+  },
+  "26": {
+    "value": "10",
+    "type": 20,
+    "line": 5,
+    "char": 19
+  },
+  "27": {
+    "value": "do",
+    "type": 9,
+    "line": 5,
+    "char": 22
+  },
+  "28": {
+    "value": "[",
+    "type": 31,
+    "line": 5,
+    "char": 25
+  },
+  "29": {
+    "value": ":",
+    "type": 36,
+    "line": 5,
+    "char": 26
+  },
+  "30": {
+    "value": "sum",
+    "type": 24,
+    "line": 6,
+    "char": 4
+  },
+  "31": {
+    "value": "as",
+    "type": 3,
+    "line": 6,
+    "char": 8
+  },
+  "32": {
+    "value": "sum",
+    "type": 24,
+    "line": 6,
+    "char": 11
+  },
+  "33": {
+    "value": "+",
+    "type": 37,
+    "line": 6,
+    "char": 15
+  },
+  "34": {
+    "value": "i",
+    "type": 24,
+    "line": 6,
+    "char": 17
+  },
+  "35": {
+    "value": ":",
+    "type": 36,
+    "line": 6,
+    "char": 18
+  },
+  "36": {
+    "value": "while",
+    "type": 10,
+    "line": 7,
+    "char": 4
+  },
+  "37": {
+    "value": "auxiliary",
+    "type": 24,
+    "line": 7,
+    "char": 10
+  },
+  "38": {
+    "value": ">",
+    "type": 29,
+    "line": 7,
+    "char": 20
+  },
+  "39": {
+    "value": "0",
+    "type": 20,
+    "line": 7,
+    "char": 22
+  },
+  "40": {
+    "value": "do",
+    "type": 9,
+    "line": 7,
+    "char": 24
+  },
+  "41": {
+    "value": "[",
+    "type": 31,
+    "line": 7,
+    "char": 27
+  },
+  "42": {
+    "value": ":",
+    "type": 36,
+    "line": 7,
+    "char": 28
+  },
+  "43": {
+    "value": "auxiliary",
+    "type": 24,
+    "line": 8,
+    "char": 8
+  },
+  "44": {
+    "value": "as",
+    "type": 3,
+    "line": 8,
+    "char": 18
+  },
+  "45": {
+    "value": "auxiliary",
+    "type": 24,
+    "line": 8,
+    "char": 21
+  },
+  "46": {
+    "value": "-",
+    "type": 38,
+    "line": 8,
+    "char": 31
+  },
+  "47": {
+    "value": "2",
+    "type": 20,
+    "line": 8,
+    "char": 33
+  },
+  "48": {
+    "value": ":",
+    "type": 36,
+    "line": 8,
+    "char": 34
+  },
+  "49": {
+    "value": "]",
+    "type": 32,
+    "line": 9,
+    "char": 4
+  },
+  "50": {
+    "value": ":",
+    "type": 36,
+    "line": 9,
+    "char": 5
+  },
+  "51": {
+    "value": ":",
+    "type": 36,
+    "line": 10,
+    "char": 0
+  },
+  "52": {
+    "value": "if",
+    "type": 4,
+    "line": 11,
+    "char": 4
+  },
+  "53": {
+    "value": "auxiliary",
+    "type": 24,
+    "line": 11,
+    "char": 7
+  },
+  "54": {
+    "value": "=",
+    "type": 25,
+    "line": 11,
+    "char": 17
+  },
+  "55": {
+    "value": "0",
+    "type": 20,
+    "line": 11,
+    "char": 19
+  },
+  "56": {
+    "value": "then",
+    "type": 5,
+    "line": 11,
+    "char": 21
+  },
+  "57": {
+    "value": "write",
+    "type": 12,
+    "line": 11,
+    "char": 26
+  },
+  "58": {
+    "value": "(",
+    "type": 33,
+    "line": 11,
+    "char": 31
+  },
+  "59": {
+    "value": "auxiliary",
+    "type": 24,
+    "line": 11,
+    "char": 32
+  },
+  "60": {
+    "value": ")",
+    "type": 34,
+    "line": 11,
+    "char": 41
+  },
+  "61": {
+    "value": ":",
+    "type": 36,
+    "line": 11,
+    "char": 42
+  },
+  "62": {
+    "value": "else",
+    "type": 6,
+    "line": 12,
+    "char": 4
+  },
+  "63": {
+    "value": "write",
+    "type": 12,
+    "line": 12,
+    "char": 9
+  },
+  "64": {
+    "value": "(",
+    "type": 33,
+    "line": 12,
+    "char": 14
+  },
+  "65": {
+    "value": "printFalse",
+    "type": 24,
+    "line": 12,
+    "char": 15
+  },
+  "66": {
+    "value": ")",
+    "type": 34,
+    "line": 12,
+    "char": 25
+  },
+  "67": {
+    "value": ":",
+    "type": 36,
+    "line": 12,
+    "char": 26
+  },
+  "68": {
+    "value": ":",
+    "type": 36,
+    "line": 13,
+    "char": 0
+  },
+  "69": {
+    "value": "i",
+    "type": 24,
+    "line": 14,
+    "char": 4
+  },
+  "70": {
+    "value": "as",
+    "type": 3,
+    "line": 14,
+    "char": 6
+  },
+  "71": {
+    "value": "i",
+    "type": 24,
+    "line": 14,
+    "char": 9
+  },
+  "72": {
+    "value": "+",
+    "type": 37,
+    "line": 14,
+    "char": 11
+  },
+  "73": {
+    "value": "1d",
+    "type": 20,
+    "line": 14,
+    "char": 13
+  },
+  "74": {
+    "value": "]",
+    "type": 32,
+    "line": 14,
+    "char": 15
+  },
+  "75": {
+    "value": ":",
+    "type": 36,
+    "line": 14,
+    "char": 16
+  },
+  "76": {
+    "value": ":",
+    "type": 36,
+    "line": 15,
+    "char": 0
+  },
+  "77": {
+    "value": "write",
+    "type": 12,
+    "line": 16,
+    "char": 0
+  },
+  "78": {
+    "value": "(",
+    "type": 33,
+    "line": 16,
+    "char": 5
+  },
+  "79": {
+    "value": "sum",
+    "type": 24,
+    "line": 16,
+    "char": 6
+  },
+  "80": {
+    "value": ")",
+    "type": 34,
+    "line": 16,
+    "char": 9
+  },
+  "81": {
+    "value": ":",
+    "type": 36,
+    "line": 16,
+    "char": 10
+  },
+  "82": {
+    "value": "end",
+    "type": 1,
+    "line": 17,
+    "char": 0
+  }
+}

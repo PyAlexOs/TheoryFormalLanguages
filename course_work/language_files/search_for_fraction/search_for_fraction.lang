@@ -1,0 +1,32 @@
+{ Найти дробное число, которое лежит в интервале [lower; higher] / denominator и равно введенному дробному числу }
+
+dim lower, higher, denominator, searchingFor, current %
+read(lower, higher, denominator, searchingFor)
+
+dim auxiliary, e !
+current as 1
+e as 0.0E1000 {для вывода кода ошибки}
+
+dim flag $
+flag as true
+
+if denominator <> 0 then [
+    while flag do
+    [
+        if lower <= current then [
+            auxiliary as current / denominator
+            if auxiliary = searchingFor then [
+                flag as false
+                write(auxiliary)
+            ]
+        ]
+
+        if current < higher then current as current + 1
+        else [
+            flag as false
+        ]
+    ]
+] else [
+    write(e)
+]
+end

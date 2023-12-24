@@ -171,7 +171,7 @@ class Parser:
                 and self.tokens.front().token_type != TokenType.NOTE_START):
             raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
-    def check_operator(self):
+    def check_operator(self) -> bool:
         """ Checks whether the operator matches the grammar of the language """
         while not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.OPERATOR_DELIMITER:
             self.tokens.get()
@@ -207,9 +207,12 @@ class Parser:
             else:
                 if (self.tokens.front().token_type != TokenType.BLOCK_END and self.last != TokenType.BLOCK_START
                         and self.tokens.front().token_type != TokenType.NOTE_START):
-                    raise UnexpectedTokenError(self.tokens.get(), "End of block")
+                    if self.last == TokenType.IF or self.last == TokenType.FOR or self.last == TokenType.WHILE:
+                        return False
 
-            if self.tokens.front().token_type == TokenType.NOTE_START:
+                    raise UnexpectedTokenError(self.tokens.front(), "End of block")
+
+            if not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.NOTE_START:
                 self.note_ongoing = True
                 self.tokens.get()
                 if not self.tokens.is_empty():
@@ -218,6 +221,8 @@ class Parser:
                         raise UnexpectedTokenError(next_token, "End of note")
 
                     self.note_ongoing = False
+
+        return True
 
     def check_compound(self):
         """ Checks whether the compound operator matches the grammar of the language """
@@ -277,10 +282,13 @@ class Parser:
             raise PredicateTypeError(expression.type, line, char)
 
         if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.THEN:
-            raise UnexpectedTokenError(self.tokens.get(), "then")
+            raise UnexpectedTokenError(self.tokens.get(), "Then")
 
         self.tokens.get()
-        self.check_operator()
+        if not self.tokens.is_empty():
+            auxiliary = self.tokens.front()
+            if not self.check_operator():
+                raise UnexpectedTokenError(auxiliary, "Operator for conditional")
 
         count = 0
         while not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.OPERATOR_DELIMITER:
@@ -289,7 +297,10 @@ class Parser:
 
         if not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.ELSE:
             self.tokens.get()
-            self.check_operator()
+            if not self.tokens.is_empty():
+                auxiliary = self.tokens.front()
+                if not self.check_operator():
+                    raise UnexpectedTokenError(auxiliary, "Operator for conditional")
 
         if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
                 and self.block == 0 and count == 0 and self.tokens.front().token_type != TokenType.NOTE_START):
@@ -318,7 +329,10 @@ class Parser:
                 raise UnexpectedTokenError(self.tokens.get(), "do")
 
             self.tokens.get()
-            self.check_operator()
+            if not self.tokens.is_empty():
+                auxiliary = self.tokens.front()
+                if not self.check_operator():
+                    raise UnexpectedTokenError(auxiliary, "Operator for fixed cycle")
 
         if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
                 and self.tokens.front().token_type != TokenType.NOTE_START):
@@ -338,8 +352,12 @@ class Parser:
             if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.DO:
                 raise UnexpectedTokenError(self.tokens.get(), "do")
 
-            self.tokens.get()
-            self.check_operator()
+            if not self.tokens.is_empty():
+                self.tokens.get()
+                if not self.tokens.is_empty():
+                    auxiliary = self.tokens.front()
+                    if not self.check_operator():
+                        raise UnexpectedTokenError(auxiliary, "Operator for conditional cycle")
 
         if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
                 and self.tokens.front().token_type != TokenType.NOTE_START):
