@@ -167,7 +167,8 @@ class Parser:
 
             self.identifier_table.append(Identifier(_name=identifier.value, _type=identifiers_type))
 
-        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER:
+        if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
+                and self.tokens.front().token_type != TokenType.NOTE_START):
             raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_operator(self):
@@ -203,7 +204,12 @@ class Parser:
 
                 self.check_read_write()
 
-            elif self.tokens.front().token_type == TokenType.NOTE_START:
+            else:
+                if (self.tokens.front().token_type != TokenType.BLOCK_END and self.last != TokenType.BLOCK_START
+                        and self.tokens.front().token_type != TokenType.NOTE_START):
+                    raise UnexpectedTokenError(self.tokens.get(), "End of block")
+
+            if self.tokens.front().token_type == TokenType.NOTE_START:
                 self.note_ongoing = True
                 self.tokens.get()
                 if not self.tokens.is_empty():
@@ -212,10 +218,6 @@ class Parser:
                         raise UnexpectedTokenError(next_token, "End of note")
 
                     self.note_ongoing = False
-
-            else:
-                if self.tokens.front().token_type != TokenType.BLOCK_END and self.last != TokenType.BLOCK_START:
-                    raise UnexpectedTokenError(self.tokens.get(), "End of block")
 
     def check_compound(self):
         """ Checks whether the compound operator matches the grammar of the language """
@@ -230,7 +232,8 @@ class Parser:
             self.block -= 1
 
         if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
-                and self.last != TokenType.IF and self.tokens.front().token_type != TokenType.ELSE):
+                and self.last != TokenType.IF and self.tokens.front().token_type != TokenType.ELSE
+                and self.tokens.front().token_type != TokenType.NOTE_START):
             raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_assignment(self):
@@ -260,7 +263,8 @@ class Parser:
                             raise AssignmentTypeError(identifier, new_value.type, existing_id.type)
 
         if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
-                and self.last != TokenType.FOR and self.block == 0):
+                and self.last != TokenType.FOR and self.block == 0
+                and self.tokens.front().token_type != TokenType.NOTE_START):
             raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_conditional(self):
@@ -288,7 +292,7 @@ class Parser:
             self.check_operator()
 
         if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
-                and self.block == 0 and  count == 0):
+                and self.block == 0 and count == 0 and self.tokens.front().token_type != TokenType.NOTE_START):
             raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_fixed_cycle(self):
@@ -316,7 +320,8 @@ class Parser:
             self.tokens.get()
             self.check_operator()
 
-        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER:
+        if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
+                and self.tokens.front().token_type != TokenType.NOTE_START):
             raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_conditional_cycle(self):
@@ -336,7 +341,8 @@ class Parser:
             self.tokens.get()
             self.check_operator()
 
-        if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER:
+        if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
+                and self.tokens.front().token_type != TokenType.NOTE_START):
             raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_read_write(self):
@@ -408,7 +414,7 @@ class Parser:
                 raise ReferencedBeforeAssignmentError(identifier_list[flags.index(False)], True)
 
         if (not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.OPERATOR_DELIMITER
-                and self.block == 0):
+                and self.block == 0 and self.tokens.front().token_type != TokenType.NOTE_START):
             raise UnexpectedTokenError(self.tokens.get(), "Operator delimiter")
 
     def check_expression(self) -> Identifier:
