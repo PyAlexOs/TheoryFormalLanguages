@@ -1,1 +1,19 @@
-тоыващшсмщшлыватдлБьтаватмот<шгиргшргщш
+{ one-line comment at the beginning }
+dim a, b, i %
+read(a, b)
+i as 1
+
+dim bool $ {comment after declaration; $ stands for boolean}
+bool as true
+
+{ one more comment }
+while a < b do [
+    write(i)
+    i as i + 1
+    if i > 10 then bool as false {one more comment here}
+]
+{
+    multi-line comment
+    at the end of the file
+}
+end

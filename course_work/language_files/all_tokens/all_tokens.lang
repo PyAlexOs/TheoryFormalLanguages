@@ -9,6 +9,7 @@ d as 123.456
 bool as true
 
 dim i !
+i as 0
 while bool do [
     i as i + 1
     if not (a * b + c <= a * a) and (b + b <> c) or (c > a) then bool as false

@@ -128,7 +128,6 @@ class Parser:
 
             else:
                 message = "Identifier or type"
-                print(self.tokens.front().token_type)
                 if not self.tokens.is_empty() and self.tokens.front().token_type == TokenType.IDENTIFIER:
                     message = "Comma"
 
@@ -357,7 +356,7 @@ class Parser:
                 raise PredicateTypeError(expression.type, line, char)
 
             if not self.tokens.is_empty() and self.tokens.front().token_type != TokenType.DO:
-                raise UnexpectedTokenError(self.tokens.get(), "do")
+                raise UnexpectedTokenError(self.tokens.get(), "Do")
 
             if not self.tokens.is_empty():
                 self.tokens.get()
